@@ -19,6 +19,17 @@ includes:
   android: ./build/android/Taskfile.yml
 
 tasks:
+  check:
+    summary: Builds frontend assets, then checks frontend and Go code
+    deps:
+      - task: common:build:frontend
+    cmds:
+      - task: common:frontend:run
+        vars:
+          SCRIPT: check
+      - go test ./...
+      - go vet ./...
+
   build:
     summary: Builds the application
     cmds:

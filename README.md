@@ -1,59 +1,124 @@
-# Welcome to Your New Wails3 Project!
+# Career Snowflakes
 
-Congratulations on generating your Wails3 application! This README will guide you through the next steps to get your project up and running.
+Локальное desktop-приложение на Wails 3, Go и React для отслеживания профессионального развития. Диаграмма вдохновлена [Medium Engineering Growth Framework](https://medium.com/s/engineering-growth-framework); стартовые описания этапов написаны для этого проекта и свободно редактируются.
 
-## Getting Started
+## Запуск
 
-1. Navigate to your project directory in the terminal.
+Нужны Go 1.25+, Node.js 24 LTS, pnpm 11.3.0 и Wails 3 CLI. Версия Go-библиотеки Wails закреплена в `go.mod`; CLI можно установить соответствующей версии:
 
-2. To run your application in development mode, use the following command:
+```sh
+go install github.com/wailsapp/wails/v3/cmd/wails3@v3.0.0-alpha2.119
+pnpm --dir frontend install --frozen-lockfile
+wails3 dev
+```
 
-   ```
-   wails3 dev
-   ```
+На Windows нужен WebView2 Runtime. Если PowerShell блокирует `pnpm.ps1`, используйте `pnpm.cmd` вместо `pnpm`. Глобальную execution policy менять не требуется.
 
-   This will start your application and enable hot-reloading for both frontend and backend changes.
+```sh
+wails3 build
+```
 
-3. To build your application for production, use:
+Windows-приложение появится в `bin/career-snowflakes.exe`. `wails3 dev` запускает Go и Vite совместно. Отдельный `pnpm --dir frontend dev` запускает только фронтенд: для данных и файловых диалогов требуется desktop-runtime Wails.
 
-   ```
-   wails3 build
-   ```
+## Как пользоваться
 
-   This will create a production-ready executable in the `build` directory.
+- Выберите трек в списке или сегмент круга: справа появится описание этапа и примеры.
+- Кнопка «Установить уровень» сохраняет достигнутый уровень вместе со всеми предыдущими этапами. Можно снизить уровень или сбросить прогресс конкретного трека.
+- В диаграмме работают стрелки: влево/вправо переключают треки, вверх/вниз — этапы, Home/End — первый/последний этап. Tab переводит фокус между элементами интерфейса.
+- В настройках меняются профиль, название схемы, направления, цвета, треки, уровни и примеры. Изменения остаются черновиком до нажатия «Сохранить изменения». Удаление и отмена правок требуют подтверждения.
+- Импорт и экспорт через системные диалоги используют JSON. Экспорт включает схему, профиль и прогресс. Импорт заменяет текущую карту только после успешной проверки и записи. Для нескольких карт сохраняйте отдельные экспорты.
 
-## Exploring Wails3 Features
+Начальная матрица содержит четыре направления, 16 треков и пять этапов в каждом. Прогресс начинается с нуля. Счётчики показывают число достигнутых этапов, начатых треков и процент освоения схемы. Корпоративные грейды и пороги Medium не переносятся: их смысл зависит от конкретной организации.
 
-Now that you have your project set up, it's time to explore the features that Wails3 offers:
+## Хранение и формат
 
-1. **Check out the examples**: The best way to learn is by example. Visit the `examples` directory in the `v3/examples` directory to see various sample applications.
+Go хранит документ в `os.UserConfigDir()/career-snowflakes/career.json`:
 
-2. **Run an example**: To run any of the examples, navigate to the example's directory and use:
+- Windows: `%APPDATA%/career-snowflakes/career.json`.
+- macOS: `~/Library/Application Support/career-snowflakes/career.json`.
+- Linux: `$XDG_CONFIG_HOME/career-snowflakes/career.json` или `~/.config/career-snowflakes/career.json`.
 
-   ```
-   go run .
-   ```
+Первый запуск создаёт начальную карту. Запись выполняется через временный файл в том же каталоге с последующей заменой. Повреждённый существующий файл не перезаписывается; интерфейс показывает ошибку и путь. Для восстановления сначала сохраните его копию, затем исправьте файл или переместите его, чтобы приложение создало новую карту.
 
-   Note: Some examples may be under development during the alpha phase.
+Минимальный импортируемый документ:
 
-3. **Explore the documentation**: Visit the [Wails3 documentation](https://v3.wails.io/) for in-depth guides and API references.
+```json
+{
+  "version": 1,
+  "profile": { "name": "Мой профиль", "role": "Software Engineer" },
+  "schema": {
+    "name": "Моя матрица",
+    "groups": [{
+      "id": "engineering",
+      "name": "Технологии",
+      "color": "aqua",
+      "tracks": [{
+        "id": "testing",
+        "name": "Тестирование",
+        "description": "Уверенность в поведении продукта",
+        "levels": [{
+          "name": "Основы",
+          "description": "Проверяю типичные и граничные сценарии.",
+          "examples": ["Добавляю регрессионный тест перед исправлением ошибки."]
+        }]
+      }]
+    }]
+  },
+  "progress": { "testing": 0 }
+}
+```
 
-4. **Join the community**: Have questions or want to share your progress? Join the [Wails Discord](https://discord.gg/JDdSxwjhGf) or visit the [Wails discussions on GitHub](https://github.com/wailsapp/wails/discussions).
+Ограничения: 1–8 направлений, 1–32 трека суммарно, 1–8 этапов в треке; в каждом направлении нужен хотя бы один трек. Идентификаторы направлений и треков уникальны во всём документе и содержат 1–64 латинских букв, цифр, `-` или `_`. Названия — до 120 символов, описания — до 4000, примеры — до 20 строк по 1000 символов. Цвета: `red`, `green`, `yellow`, `blue`, `purple`, `aqua`, `orange`. Прогресс — целое число от 0 до числа этапов; неизвестные треки, поля и версии JSON отклоняются. Размер файла ограничен 2 MiB.
 
-## Project Structure
+## Код
 
-Take a moment to familiarize yourself with your project structure:
+- `internal/career`: Go-модели, проверка документа, начальная матрица.
+- `internal/storage`: загрузка, сохранение, импорт и экспорт файлов.
+- `careerservice.go`, `dialogs.go`: тонкий Wails-сервис и системные диалоги.
+- `frontend/bindings`: сгенерированный контракт Go → TypeScript; не редактируется вручную.
+- `frontend/src/features/career`: диаграмма, выбор этапа, отображение прогресса, запросы к Go.
+- `frontend/src/features/settings`: редактор черновика схемы.
+- `frontend/src/components/ui`: компоненты shadcn/ui на Base UI.
 
-- `frontend/`: Contains your frontend code (HTML, CSS, JavaScript/TypeScript)
-- `main.go`: The entry point of your Go backend
-- `app.go`: Define your application structure and methods here
-- `wails.json`: Configuration file for your Wails project
+Правила файлового формата и проверка данных находятся на Go. Фронтенд управляет состоянием интерфейса, черновиком и отображением; обновляет сохранённую карту только после успешного ответа Go. Типы интерфейса выводятся из generated bindings; уточнение non-null коллекций на границе основано на нормализации Go.
 
-## Next Steps
+После изменения методов или Go-моделей:
 
-1. Modify the frontend in the `frontend/` directory to create your desired UI.
-2. Add backend functionality in `main.go`.
-3. Use `wails3 dev` to see your changes in real-time.
-4. When ready, build your application with `wails3 build`.
+```sh
+wails3 generate bindings -clean=true -ts -i
+```
 
-Happy coding with Wails3! If you encounter any issues or have questions, don't hesitate to consult the documentation or reach out to the Wails community.
+## Цвета и компоненты
+
+`frontend/src/index.css` содержит всю [Gruvbox-палитру](https://github.com/morhetz/gruvbox), например `--gruvbox-dark0`, `--gruvbox-aqua-bright`, и семантические токены shadcn (`--background`, `--foreground`, `--primary`, `--border` и другие). Для направлений используйте `--track-aqua` или Tailwind `text-track-aqua`: оттенок автоматически меняется вместе с темой. Тёмная тема — по умолчанию; светлая задаётся классом `.light` на корневом элементе. Переключатель доступен в шапке.
+
+Компоненты установлены официальным [shadcn CLI](https://ui.shadcn.com/docs/cli) с основой `base` и стилем `base-nova`. Добавить компонент:
+
+```sh
+cd frontend
+pnpm exec shadcn add tooltip
+```
+
+## Проверки
+
+Из корня можно запустить все проверки вместе с подготовкой assets и bindings:
+
+```sh
+wails3 task check
+```
+
+Или отдельно:
+
+```sh
+pnpm --dir frontend check
+pnpm --dir frontend test:coverage
+pnpm --dir frontend build
+go test ./...
+go vet ./...
+```
+
+На чистом checkout перед `go test ./...` нужна сборка фронтенда: `main.go` встраивает `frontend/dist`. Отчёт покрытия фронтенда — `frontend/coverage/index.html`.
+
+Для разработки есть `format`, `lint:fix` и `test:watch`. [Oxlint](https://oxc.rs/docs/guide/usage/linter/config) включает категории correctness/suspicious, React Hooks, accessibility, TypeScript, Vitest и [type-aware проверки](https://oxc.rs/docs/guide/usage/linter/type-aware), в том числе небезопасных типов и необработанных Promise. Предупреждения завершают проверку ошибкой. Oxfmt отвечает за форматирование; ESLint и Prettier не требуются. Generated bindings исключены из линтинга и форматирования. Узкие исключения в коде объясняют SVG-роли и гарантии Go-контракта.
+
+Тесты проверяют геометрию, клавиатурный выбор, подсчёт прогресса, успешные и неудачные операции, черновики и изменение структуры схемы. Go-тесты проверяют валидацию, нормализацию, запись и импорт/экспорт, повреждённые и слишком большие файлы, отмену диалогов и сохранность данных при ошибках.

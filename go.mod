@@ -1,4 +1,4 @@
-module changeme
+module career-snowflakes
 
 go 1.25.0
 

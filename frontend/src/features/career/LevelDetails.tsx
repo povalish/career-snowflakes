@@ -9,6 +9,7 @@ interface LevelDetailsProps {
   level: number;
   progress: number;
   busy: boolean;
+  error: string;
   onSelectLevel: (level: number) => void;
   onSetProgress: (level: number) => void;
 }
@@ -19,6 +20,7 @@ export function LevelDetails({
   level,
   progress,
   busy,
+  error,
   onSelectLevel,
   onSetProgress,
 }: LevelDetailsProps) {
@@ -44,6 +46,11 @@ export function LevelDetails({
         </span>
       </div>
       <p className="track-description">{track.description}</p>
+      {error && (
+        <div role="alert" className="error-message detail-error">
+          <strong>Не удалось выполнить действие.</strong> {error}
+        </div>
+      )}
       <div className="level-selector" aria-label="Уровни трека">
         {track.levels.map((item, index) => (
           <button

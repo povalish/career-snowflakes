@@ -8,7 +8,12 @@ import type { Selection } from "./types";
 function InteractiveSnowflake() {
   const [selection, setSelection] = useState<Selection>({ trackId: "web", level: 2 });
   return (
-    <Snowflake document={createCareerDocument()} selection={selection} onSelect={setSelection} />
+    <Snowflake
+      document={createCareerDocument()}
+      selection={selection}
+      onSelect={setSelection}
+      onActivate={setSelection}
+    />
   );
 }
 
@@ -29,21 +34,46 @@ describe("Snowflake", () => {
     ).toHaveLength(1);
   });
 
-  it("reports the clicked stage without mutating progress", () => {
+  it("reports the activated stage without mutating progress", () => {
     const document = createCareerDocument();
     const onSelect = vi.fn<(selection: Selection) => void>();
+    const onActivate = vi.fn<(selection: Selection) => void>();
     render(
       <Snowflake
         document={document}
         selection={{ trackId: "web", level: 2 }}
         onSelect={onSelect}
+        onActivate={onActivate}
       />,
     );
 
     fireEvent.click(screen.getByRole("button", { name: "Менторство, уровень 2: Развитие" }));
 
-    expect(onSelect).toHaveBeenCalledWith({ trackId: "mentoring", level: 2 });
+    expect(onActivate).toHaveBeenCalledWith({ trackId: "mentoring", level: 2 });
+    expect(onSelect).not.toHaveBeenCalled();
     expect(document.progress).toEqual({ web: 1, servers: 0, mentoring: 0 });
+  });
+
+  it("activates with Enter and keeps arrow keys as navigation", () => {
+    const onSelect = vi.fn<(selection: Selection) => void>();
+    const onActivate = vi.fn<(selection: Selection) => void>();
+    render(
+      <Snowflake
+        document={createCareerDocument()}
+        selection={{ trackId: "web", level: 2 }}
+        onSelect={onSelect}
+        onActivate={onActivate}
+      />,
+    );
+    const stage = screen.getByRole("button", { name: "Веб, уровень 2: Практика" });
+
+    fireEvent.keyDown(stage, { key: "Enter" });
+    expect(onActivate).toHaveBeenCalledWith({ trackId: "web", level: 2 });
+    expect(onSelect).not.toHaveBeenCalled();
+
+    fireEvent.keyDown(stage, { key: "ArrowUp" });
+    expect(onSelect).toHaveBeenCalledWith({ trackId: "web", level: 3 });
+    expect(onActivate).toHaveBeenCalledOnce();
   });
 
   it("navigates across tracks, clamps shorter tracks and wraps at either end", () => {

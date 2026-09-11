@@ -8,9 +8,10 @@ interface SnowflakeProps {
   document: CareerDocument;
   selection: Selection;
   onSelect: (selection: Selection) => void;
+  onActivate: (selection: Selection) => void;
 }
 
-export function Snowflake({ document, selection, onSelect }: SnowflakeProps) {
+export function Snowflake({ document, selection, onSelect, onActivate }: SnowflakeProps) {
   const labelId = useId();
   const tracks = getTracks(document);
   const maxLevels = Math.max(...tracks.map(({ track }) => track.levels.length));
@@ -18,6 +19,13 @@ export function Snowflake({ document, selection, onSelect }: SnowflakeProps) {
   const ringWidth = 172 / maxLevels;
 
   function navigate(event: KeyboardEvent<SVGPathElement>, trackIndex: number, level: number) {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      const entry = tracks[trackIndex];
+      if (entry) onActivate({ trackId: entry.track.id, level });
+      return;
+    }
+
     let nextTrack = trackIndex;
     let nextLevel = level;
     switch (event.key) {
@@ -38,9 +46,6 @@ export function Snowflake({ document, selection, onSelect }: SnowflakeProps) {
         break;
       case "End":
         nextLevel = maxLevels;
-        break;
-      case "Enter":
-      case " ":
         break;
       default:
         return;
@@ -92,7 +97,8 @@ export function Snowflake({ document, selection, onSelect }: SnowflakeProps) {
                   tabIndex={selected ? 0 : -1}
                   aria-label={`${track.name}, уровень ${level}: ${stage.name}${completed ? ", достигнут" : ""}`}
                   aria-pressed={selected}
-                  onClick={() => onSelect({ trackId: track.id, level })}
+                  aria-haspopup={selected ? "dialog" : undefined}
+                  onClick={() => onActivate({ trackId: track.id, level })}
                   onKeyDown={(event) => navigate(event, index, level)}
                 >
                   <title>

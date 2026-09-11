@@ -1,11 +1,4 @@
-.workspace {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 326px;
-  gap: 24px;
-  align-items: start;
-}
-.chart-panel,
-.level-details {
+.chart-panel {
   border: 1px solid var(--border);
   background: var(--card);
   border-radius: 12px;
@@ -39,16 +32,19 @@
 }
 .chart-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 211px;
+  grid-template-columns: minmax(0, 620px) minmax(211px, 240px);
   align-items: center;
-  gap: 0;
+  justify-content: center;
+  gap: clamp(28px, 5vw, 72px);
+  max-width: 980px;
+  margin: 0 auto;
   padding: 9px 20px 21px 6px;
 }
 .chart-container {
   min-width: 0;
-  max-width: 560px;
+  max-width: 620px;
   width: 100%;
-  margin: 0 auto;
+  margin: 0;
 }
 .snowflake {
   width: 100%;
@@ -185,33 +181,4 @@
 }
 .track-row[aria-pressed="true"] > svg {
   opacity: 0.8;
-}
-.chart-footer {
-  border-top: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  gap: 22px;
-  padding: 15px 25px;
-}
-.chart-footer > span {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  color: var(--muted-foreground);
-  font-size: 9px;
-}
-.chart-footer i {
-  width: 8px;
-  height: 8px;
-  border-radius: 2px;
-}
-.legend-completed {
-  background: var(--track-aqua);
-}
-.legend-upcoming {
-  background: var(--muted);
-  border: 1px solid var(--border);
-}
-.legend-selected {
-  border: 1px solid var(--foreground);
 }

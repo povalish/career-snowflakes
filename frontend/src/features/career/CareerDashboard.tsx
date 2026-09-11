@@ -1,7 +1,6 @@
-import { ArrowDownToLine, ArrowUpFromLine, CircleHelp } from "lucide-react";
-import { Button } from "../../components/ui/button";
+import { CircleHelp } from "lucide-react";
+import { Dialog, DialogContent, DialogTitle } from "../../components/ui/dialog";
 import { getSelection } from "./progress";
-import { ProfileSummary } from "./ProfileSummary";
 import { Snowflake } from "./Snowflake";
 import { TrackList } from "./TrackList";
 import { LevelDetails } from "./LevelDetails";
@@ -10,116 +9,97 @@ import type { CareerDocument, Selection } from "./types";
 interface CareerDashboardProps {
   document: CareerDocument;
   busy: boolean;
+  error: string;
   selection: Selection | null;
+  detailsOpen: boolean;
   onSelect: (selection: Selection) => void;
-  onImport: () => void;
-  onExport: () => void;
+  onDetailsOpenChange: (open: boolean) => void;
   onSave: (document: CareerDocument) => void;
 }
 
 export function CareerDashboard({
   document,
   busy,
+  error,
   selection,
+  detailsOpen,
   onSelect,
-  onImport,
-  onExport,
+  onDetailsOpenChange,
   onSave,
 }: CareerDashboardProps) {
   const selected = getSelection(document, selection);
   if (!selected) return null;
+  const activeSelection = { trackId: selected.track.id, level: selected.level };
+
+  function activate(next: Selection) {
+    const opensDetails =
+      next.trackId === activeSelection.trackId && next.level === activeSelection.level;
+    onSelect(next);
+    if (opensDetails) onDetailsOpenChange(true);
+  }
+
+  function changeDetailsOpen(open: boolean) {
+    onDetailsOpenChange(open);
+    if (!open) {
+      queueMicrotask(() => {
+        globalThis.document
+          .querySelector<SVGPathElement>('.snowflake-segment[data-selected="true"]')
+          ?.focus();
+      });
+    }
+  }
+
   return (
     <>
-      {" "}
-      <section className="page-heading">
-        <div>
-          <p className="eyebrow">ЛИЧНАЯ КАРТА РАЗВИТИЯ</p>
-          <h1>
-            Расти в своём направлении<span>.</span>
-          </h1>
-          <p className="page-description">
-            Большая карьера складывается из маленьких шагов. Отметь свой следующий.
-          </p>
+      <section className="chart-panel" aria-labelledby="schema-title">
+        <div className="panel-heading">
+          <div>
+            <p className="eyebrow">ОБЗОР</p>
+            <h2 id="schema-title">{document.schema.name}</h2>
+          </div>
+          <span className="small-badge">Направлений: {document.schema.groups.length}</span>
         </div>
-        <div className="file-actions">
-          <Button variant="ghost" disabled={busy} onClick={onImport}>
-            <ArrowDownToLine />
-            Импорт
-          </Button>
-          <Button
-            variant="outline"
-            disabled={busy}
-            onClick={() => {
-              onExport();
-            }}
-          >
-            <ArrowUpFromLine />
-            Экспорт
-          </Button>
+        <div className="chart-layout">
+          <div className="chart-container">
+            <Snowflake
+              document={document}
+              selection={activeSelection}
+              onSelect={onSelect}
+              onActivate={activate}
+            />
+            <p className="chart-hint">
+              <CircleHelp size={14} />
+              Выбери сектор и нажми его ещё раз, чтобы открыть подробности
+            </p>
+          </div>
+          <TrackList document={document} selection={activeSelection} onSelect={onSelect} />
         </div>
       </section>
-      <ProfileSummary document={document} />
-      <div className="workspace">
-        <section className="chart-panel" aria-labelledby="schema-title">
-          <div className="panel-heading">
-            <div>
-              <p className="eyebrow">ОБЗОР</p>
-              <h2 id="schema-title">{document.schema.name}</h2>
-            </div>
-            <span className="small-badge">Направлений: {document.schema.groups.length}</span>
-          </div>
-          <div className="chart-layout">
-            <div className="chart-container">
-              <Snowflake
-                document={document}
-                selection={{ trackId: selected.track.id, level: selected.level }}
-                onSelect={onSelect}
-              />
-              <p className="chart-hint">
-                <CircleHelp size={14} />
-                Выбери сектор, чтобы узнать больше об этапе
-              </p>
-            </div>
-            <TrackList
-              document={document}
-              selection={{ trackId: selected.track.id, level: selected.level }}
-              onSelect={onSelect}
-            />
-          </div>
-          <div className="chart-footer">
-            <span>
-              <i className="legend-completed" />
-              Достигнуто
-            </span>
-            <span>
-              <i className="legend-upcoming" />
-              Впереди
-            </span>
-            <span>
-              <i className="legend-selected" />
-              Выбранный этап
-            </span>
-          </div>
-        </section>
-        <LevelDetails
-          group={selected.group}
-          track={selected.track}
-          level={selected.level}
-          progress={document.progress[selected.track.id] ?? 0}
-          busy={busy}
-          onSelectLevel={(level) => onSelect({ trackId: selected.track.id, level })}
-          onSetProgress={(level) => {
-            onSave({
-              ...document,
-              progress: { ...document.progress, [selected.track.id]: level },
-            });
-          }}
-        />
-      </div>
-      <footer className="app-footer">
-        <span>У каждого свой рисунок роста.</span>
-        <span>Вдохновлено Medium Engineering Growth Framework</span>
-      </footer>
+      <Dialog open={detailsOpen} onOpenChange={changeDetailsOpen}>
+        <DialogContent
+          className="level-details-dialog max-h-[calc(100dvh-1rem)] max-w-[calc(100%-1rem)] gap-0 overflow-hidden p-0 sm:max-h-[calc(100dvh-2rem)] sm:max-w-[480px]"
+          finalFocus={false}
+        >
+          <DialogTitle className="sr-only">
+            {selected.track.name}: уровень {selected.level}
+          </DialogTitle>
+          <LevelDetails
+            group={selected.group}
+            track={selected.track}
+            level={selected.level}
+            progress={document.progress[selected.track.id] ?? 0}
+            busy={busy}
+            error={error}
+            onSelectLevel={(level) => onSelect({ trackId: selected.track.id, level })}
+            onSetProgress={(level) => {
+              onSave({
+                ...document,
+                progress: { ...document.progress, [selected.track.id]: level },
+              });
+            }}
+          />
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

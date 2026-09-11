@@ -1,5 +1,21 @@
 .level-details {
   padding: 25px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card);
+  overflow: hidden;
+}
+.level-details-dialog > .level-details {
+  max-height: inherit;
+  border: 0;
+  border-radius: inherit;
+  overflow-y: auto;
+}
+.level-details-dialog .detail-heading {
+  padding-right: 32px;
+}
+.detail-error {
+  margin-bottom: 20px;
 }
 .detail-heading {
   display: flex;

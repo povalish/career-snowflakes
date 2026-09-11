@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { createCareerDocument } from "../../test/career-fixture";
-import { getProgress, getSelection, getTracks } from "./progress";
+import { getSelection, getTracks } from "./progress";
 
 describe("career progress", () => {
   it("preserves group and track order with continuous chart indices", () => {
@@ -17,27 +17,10 @@ describe("career progress", () => {
     ]);
   });
 
-  it("counts stages across uneven tracks and ignores progress for removed tracks", () => {
-    const document = createCareerDocument();
-    document.progress = { web: 2, mentoring: 1, removed: 5 };
-
-    expect(getProgress(document)).toEqual({ completed: 3, total: 6, started: 2, percent: 50 });
-  });
-
-  it("rounds the overall percentage and treats missing progress as zero", () => {
-    expect(getProgress(createCareerDocument())).toEqual({
-      completed: 1,
-      total: 6,
-      started: 1,
-      percent: 17,
-    });
-  });
-
-  it("returns zero progress and no selection for an empty schema", () => {
+  it("returns no selection for an empty schema", () => {
     const document = createCareerDocument();
     document.schema.groups = [];
 
-    expect(getProgress(document)).toEqual({ completed: 0, total: 0, started: 0, percent: 0 });
     expect(getSelection(document, null)).toBeNull();
   });
 });

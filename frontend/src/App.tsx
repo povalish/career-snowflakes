@@ -1,7 +1,7 @@
-import { AppHeader } from "./components/AppHeader";
+import { AppActions } from "./components/AppActions";
 import { CareerDashboard } from "./features/career/CareerDashboard";
 import { useState } from "react";
-import { Check, LoaderCircle } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
 import { Button } from "./components/ui/button";
 import {
   AlertDialog,
@@ -23,27 +23,18 @@ export default function App({ client = careerClient }: { client?: CareerClient }
   const [selection, setSelection] = useState<Selection | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [importOpen, setImportOpen] = useState(false);
+  const [detailsOpen, setDetailsOpen] = useState(false);
   const document = career.document;
   return (
     <div className="app-shell">
-      <AppHeader
-        settingsDisabled={!document || career.busy || settingsOpen}
-        onSettings={() => setSettingsOpen(true)}
-      />
       <main>
-        <div className="notification-area" aria-live="polite">
-          {career.error && (
+        {career.error && !detailsOpen && (
+          <div className="notification-area">
             <div role="alert" className="error-message">
               <strong>Не удалось выполнить действие.</strong> {career.error}
             </div>
-          )}
-          {career.notice && (
-            <output className="success-message">
-              <Check size={15} />
-              {career.notice}
-            </output>
-          )}
-        </div>
+          </div>
+        )}
         {!document && (
           <section className="loading-panel">
             {career.busy ? (
@@ -79,19 +70,28 @@ export default function App({ client = careerClient }: { client?: CareerClient }
           />
         )}
         {document && !settingsOpen && (
-          <CareerDashboard
-            document={document}
-            busy={career.busy}
-            selection={selection}
-            onSelect={setSelection}
-            onImport={() => setImportOpen(true)}
-            onExport={() => {
-              void career.exportDocument();
-            }}
-            onSave={(next) => {
-              void career.save(next);
-            }}
-          />
+          <div className="dashboard">
+            <AppActions
+              busy={career.busy}
+              onImport={() => setImportOpen(true)}
+              onExport={() => {
+                void career.exportDocument();
+              }}
+              onSettings={() => setSettingsOpen(true)}
+            />
+            <CareerDashboard
+              document={document}
+              busy={career.busy}
+              error={career.error}
+              selection={selection}
+              detailsOpen={detailsOpen}
+              onSelect={setSelection}
+              onDetailsOpenChange={setDetailsOpen}
+              onSave={(next) => {
+                void career.save(next);
+              }}
+            />
+          </div>
         )}
       </main>
       <AlertDialog open={importOpen} onOpenChange={setImportOpen}>

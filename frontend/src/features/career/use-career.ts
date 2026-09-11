@@ -6,7 +6,6 @@ export function useCareer(client: CareerClient) {
   const [document, setDocument] = useState<CareerDocument | null>(null);
   const [busy, setBusy] = useState(true);
   const [error, setError] = useState("");
-  const [notice, setNotice] = useState("");
   const pending = useRef(true);
 
   const run = useCallback(async (action: () => Promise<void>) => {
@@ -14,7 +13,6 @@ export function useCareer(client: CareerClient) {
     pending.current = true;
     setBusy(true);
     setError("");
-    setNotice("");
     try {
       await action();
       return true;
@@ -60,22 +58,18 @@ export function useCareer(client: CareerClient) {
   const save = (next: CareerDocument) =>
     run(async () => {
       setDocument(await client.save(next));
-      setNotice("Изменения сохранены");
     });
 
   const importDocument = () =>
     run(async () => {
       const imported = await client.importDocument();
-      if (imported) {
-        setDocument(imported);
-        setNotice("Схема и прогресс импортированы");
-      }
+      if (imported) setDocument(imported);
     });
 
   const exportDocument = () =>
     run(async () => {
-      if (await client.exportDocument()) setNotice("Схема и прогресс экспортированы");
+      await client.exportDocument();
     });
 
-  return { document, busy, error, notice, load, save, importDocument, exportDocument };
+  return { document, busy, error, load, save, importDocument, exportDocument };
 }

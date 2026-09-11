@@ -10,14 +10,19 @@ export default defineConfig({
   },
   test: {
     environment: "jsdom",
-    setupFiles: ["./src/test/setup.ts"],
+    setupFiles: ["./src/shared/testing/setup.ts"],
     restoreMocks: true,
     clearMocks: true,
     coverage: {
       provider: "v8",
       reporter: ["text", "html", "lcov"],
       include: ["src/**/*.{ts,tsx}"],
-      exclude: ["src/main.tsx", "src/test/**", "src/**/*.test.{ts,tsx}", "src/components/ui/**"],
+      exclude: [
+        "src/main.tsx",
+        "src/shared/testing/**",
+        "src/**/*.test.{ts,tsx}",
+        "src/shared/ui/**",
+      ],
     },
   },
 });

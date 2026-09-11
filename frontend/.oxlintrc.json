@@ -26,6 +26,7 @@
     "react/jsx-key": "error",
     "react/jsx-no-target-blank": "error",
     "vitest/no-focused-tests": "error",
+    "import/no-cycle": "error",
     "import/no-unassigned-import": [
       "error",
       { "allow": ["**/*.css", "@testing-library/jest-dom/vitest"] }
@@ -33,7 +34,7 @@
   },
   "overrides": [
     {
-      "files": ["src/components/ui/**/*.tsx"],
+      "files": ["src/shared/ui/**/*.tsx"],
       "rules": {
         "react/only-export-components": "off"
       }

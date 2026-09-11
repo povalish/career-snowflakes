@@ -76,9 +76,17 @@ Go хранит документ в `os.UserConfigDir()/career-snowflakes/career
 - `internal/storage`: загрузка, сохранение, импорт и экспорт файлов.
 - `careerservice.go`, `dialogs.go`: тонкий Wails-сервис и системные диалоги.
 - `frontend/bindings`: сгенерированный контракт Go → TypeScript; не редактируется вручную.
-- `frontend/src/features/career`: диаграмма, выбор этапа, отображение прогресса, запросы к Go.
-- `frontend/src/features/settings`: редактор черновика схемы.
-- `frontend/src/components/ui`: компоненты shadcn/ui на Base UI.
+- `frontend/src/app`: точка сборки приложения, Tailwind entry и токены темы.
+- `frontend/src/pages/career`: экран карты и сессия загрузки/сохранения документа.
+- `frontend/src/widgets`: самостоятельные блоки диаграммы и панели действий.
+- `frontend/src/features`: пользовательские сценарии импорта, редактирования, смены темы и прогресса.
+- `frontend/src/entities/career`: типы, Wails-клиент и чистая модель карьерного документа.
+- `frontend/src/shared`: UI-kit shadcn/Base UI и общие инфраструктурные модули.
+
+Фронтенд организован по Feature-Sliced Design. Срезы экспортируют только публичный API через
+`index.ts`: между срезами используются абсолютные импорты `@/<layer>/<slice>`, а относительные
+импорты остаются внутри среза. Зависимости направлены от верхних слоёв к нижним:
+`app → pages → widgets → features → entities → shared`.
 
 Правила файлового формата и проверка данных находятся на Go. Фронтенд управляет состоянием интерфейса, черновиком и отображением; обновляет сохранённую карту только после успешного ответа Go. Типы интерфейса выводятся из generated bindings; уточнение non-null коллекций на границе основано на нормализации Go.
 
@@ -90,7 +98,9 @@ wails3 generate bindings -clean=true -ts -i
 
 ## Цвета и компоненты
 
-`frontend/src/index.css` содержит всю [Gruvbox-палитру](https://github.com/morhetz/gruvbox), например `--gruvbox-dark0`, `--gruvbox-aqua-bright`, и семантические токены shadcn (`--background`, `--foreground`, `--primary`, `--border` и другие). Для направлений используйте `--track-aqua` или Tailwind `text-track-aqua`: оттенок автоматически меняется вместе с темой. Тёмная тема — по умолчанию; светлая задаётся классом `.light` на корневом элементе. Переключатель доступен в шапке.
+`frontend/src/app/styles/globals.css` содержит всю [Gruvbox-палитру](https://github.com/morhetz/gruvbox), например `--gruvbox-dark0`, `--gruvbox-aqua-bright`, и семантические токены shadcn (`--background`, `--foreground`, `--primary`, `--border` и другие). Для направлений используйте `--track-aqua` или Tailwind `text-track-aqua`: оттенок автоматически меняется вместе с темой. Тёмная тема — по умолчанию; светлая задаётся классом `.light` на корневом элементе. Переключатель доступен в шапке.
+
+Вёрстка компонентов, их состояния и адаптивность задаются Tailwind utility-классами рядом с JSX. В `globals.css` остаются только импорты Tailwind, палитра и семантические токены темы — компонентных селекторов в нём нет.
 
 Компоненты установлены официальным [shadcn CLI](https://ui.shadcn.com/docs/cli) с основой `base` и стилем `base-nova`. Добавить компонент:
 

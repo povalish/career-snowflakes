@@ -6,5 +6,29 @@
   "singleQuote": false,
   "trailingComma": "all",
   "endOfLine": "lf",
+  "sortImports": {
+    "customGroups": [
+      {
+        "groupName": "react",
+        "elementNamePattern": ["react", "react/**", "react-*", "react-*/**"]
+      },
+      {
+        "groupName": "project",
+        "elementNamePattern": ["@/**"]
+      },
+      {
+        "groupName": "relative",
+        "elementNamePattern": [".", "..", "./**", "../**"]
+      }
+    ],
+    "groups": [
+      "react",
+      ["builtin", "external", "subpath", "internal", "side_effect_style", "side_effect", "style"],
+      "project",
+      "relative",
+      "unknown"
+    ],
+    "newlinesBetween": true
+  },
   "ignorePatterns": ["bindings/**", "dist/**", "coverage/**", "pnpm-lock.yaml"]
 }

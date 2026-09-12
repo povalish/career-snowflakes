@@ -29,7 +29,7 @@ export const ProfileForm: React.FC<IProfileForm> = ({ defaultValues, onSubmit })
     values: {
       name: defaultValues?.name ?? "",
       role: defaultValues?.role ?? "",
-      schemaName: defaultValues?.schemaName ?? "",
+      // schemaName: defaultValues?.schemaName ?? "",
     },
   });
 
@@ -92,10 +92,10 @@ export const ProfileForm: React.FC<IProfileForm> = ({ defaultValues, onSubmit })
             <span id={`${fieldId}-role-error`} className="text-destructive" role="alert">
               {errors.role.message}
             </span>
-          )}
+          )}  
         </div>
 
-        <div className="flex min-w-0 flex-col gap-2 text-[12px]">
+        {/* <div className="flex min-w-0 flex-col gap-2 text-[12px]">
           <label className="text-foreground" htmlFor={`${fieldId}-schema`}>
             Название схемы
           </label>
@@ -115,7 +115,7 @@ export const ProfileForm: React.FC<IProfileForm> = ({ defaultValues, onSubmit })
               {errors.schemaName.message}
             </span>
           )}
-        </div>
+        </div> */}
       </div>
     </form>
   );

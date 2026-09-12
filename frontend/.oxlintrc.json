@@ -6,7 +6,7 @@
     "suspicious": "error"
   },
   "env": { "browser": true, "node": true },
-  "ignorePatterns": ["bindings/**", "dist/**", "coverage/**"],
+  "ignorePatterns": ["_legacy/**", "bindings/**", "dist/**", "coverage/**"],
   "rules": {
     "eqeqeq": ["error", "always"],
     "no-console": ["error", { "allow": ["warn", "error"] }],

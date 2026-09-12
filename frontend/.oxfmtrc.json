@@ -30,5 +30,5 @@
     ],
     "newlinesBetween": true
   },
-  "ignorePatterns": ["bindings/**", "dist/**", "coverage/**", "pnpm-lock.yaml"]
+  "ignorePatterns": ["_legacy/**", "bindings/**", "dist/**", "coverage/**", "pnpm-lock.yaml"]
 }

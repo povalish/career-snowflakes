@@ -1,34 +1,34 @@
 package career
 
 func technology() Group {
-	return Group{ID: "technology", Name: "Технологии", Color: "aqua", Tracks: []Track{
-		defaultTrack("frontend", "Интерфейсы", "Создание понятных, доступных и быстрых пользовательских интерфейсов.", [5]string{
-			"Сверстать небольшой компонент по существующему образцу и проверить его состояния.",
-			"Реализовать форму с валидацией, обработкой ошибок и управлением с клавиатуры.",
-			"Спроектировать пользовательский сценарий и устранить измеренную проблему производительности.",
-			"Ввести проверку доступности и помочь команде последовательно применять компоненты.",
-			"Развить общую систему интерфейсов и подтвердить улучшение пользовательского опыта.",
+	return Group{ID: "technology", Name: "Technology", Color: "aqua", Tracks: []Track{
+		defaultTrack("frontend", "FE", "Frontend", "Building clear, accessible, and responsive user interfaces.", [5]string{
+			"Build a small component from an existing example and verify all of its states.",
+			"Implement a form with validation, error handling, and keyboard support.",
+			"Design a user flow and resolve a measured performance issue.",
+			"Introduce accessibility checks and help the team use components consistently.",
+			"Evolve a shared interface system and demonstrate an improvement in user experience.",
 		}),
-		defaultTrack("backend", "Бэкенд", "Надёжная бизнес-логика, понятные контракты и работа с данными.", [5]string{
-			"Изменить обработчик запроса и покрыть ожидаемое поведение тестом.",
-			"Добавить API с проверкой входных данных и предсказуемыми ошибками.",
-			"Спроектировать сервис с учётом транзакций, повторных запросов и отказов.",
-			"Помочь команде обнаружить узкие места и согласовать контракты между сервисами.",
-			"Сформировать общие подходы к надёжности сервисов и проверить эффект по метрикам.",
+		defaultTrack("backend", "BE", "Backend", "Reliable business logic, clear contracts, and effective data handling.", [5]string{
+			"Modify a request handler and cover the expected behavior with a test.",
+			"Add an API with input validation and predictable errors.",
+			"Design a service that accounts for transactions, retries, and failures.",
+			"Help the team identify bottlenecks and align contracts between services.",
+			"Establish shared service reliability practices and measure their impact.",
 		}),
-		defaultTrack("foundations", "Основы", "Понимание алгоритмов, структур данных, сетей и ограничений вычислительных систем.", [5]string{
-			"Объяснить, как выбранная коллекция хранит и находит элементы.",
-			"Подобрать структуру данных и оценить сложность типовой операции.",
-			"Найти причину проблемы в работе сети, памяти или конкурентного кода.",
-			"Провести разбор технической проблемы и научить коллег подходу к её диагностике.",
-			"Применить фундаментальные знания к ограничению платформы, затрагивающему несколько команд.",
+		defaultTrack("foundations", "CS", "Computer Science", "Understanding algorithms, data structures, networks, and the constraints of computing systems.", [5]string{
+			"Explain how a chosen collection stores and retrieves elements.",
+			"Choose an appropriate data structure and estimate the complexity of a common operation.",
+			"Find the root cause of a networking, memory, or concurrency issue.",
+			"Lead a technical problem review and teach colleagues a diagnostic approach.",
+			"Apply foundational knowledge to a platform constraint affecting multiple teams.",
 		}),
-		defaultTrack("infrastructure", "Инфраструктура", "Воспроизводимая сборка, безопасная доставка и наблюдаемость приложения.", [5]string{
-			"Запустить проект локально и объяснить последовательность сборки.",
-			"Настроить проверку кода в CI и диагностировать неудачный запуск.",
-			"Настроить доставку с откатом, логами и полезными сигналами об ошибках.",
-			"Улучшить процесс релизов команды и сократить измеренное время восстановления.",
-			"Развить платформенную практику, которая повышает надёжность нескольких продуктов.",
+		defaultTrack("infrastructure", "INF", "Infrastructure", "Reproducible builds, safe delivery, and application observability.", [5]string{
+			"Run the project locally and explain the build sequence.",
+			"Configure a CI check and diagnose a failed run.",
+			"Set up delivery with rollback, logs, and useful failure signals.",
+			"Improve the team's release process and reduce measured recovery time.",
+			"Develop a platform practice that improves the reliability of multiple products.",
 		}),
 	}}
 }

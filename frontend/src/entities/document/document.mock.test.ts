@@ -10,9 +10,13 @@ describe("createDocumentMock", () => {
     const document = createDocumentMock();
     const tracks = document.schema.groups.flatMap((group) => group.tracks);
     const trackIds = new Set(tracks.map((track) => track.id));
+    const trackCodes = new Set(tracks.map((track) => track.code));
 
+    expect(document.version).toBe(2);
     expect(document.schema.groups).toHaveLength(4);
     expect(tracks).toHaveLength(16);
+    expect(trackCodes.size).toBe(tracks.length);
+    expect(tracks.every((track) => /^[A-Z]{2,3}$/.test(track.code))).toBe(true);
     expect(tracks.every((track) => track.levels.length === 5)).toBe(true);
     expect(tracks.every((track) => track.levels.every((level) => level.examples.length > 0))).toBe(
       true,

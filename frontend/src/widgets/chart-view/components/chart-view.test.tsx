@@ -11,6 +11,7 @@ import { ChartView } from "./chart-view";
 const tracks: ChartViewTrack[] = [
   {
     id: "frontend",
+    code: "FE",
     groupId: "engineering",
     name: "Фронтенд",
     color: "aqua",
@@ -32,10 +33,11 @@ describe("<ChartView />", () => {
 
     render(<ChartView tracks={tracks} onTrackSelect={onTrackSelect} />);
 
-    fireEvent.click(screen.getByRole("button", { name: /Фронтенд: уровень 2/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Фронтенд: level 2/ }));
 
     expect(onTrackSelect).toHaveBeenCalledOnce();
     expect(onTrackSelect).toHaveBeenCalledWith("frontend");
+    expect(screen.getByText("FE")).toBeVisible();
   });
 
   it("supports selecting a level from the keyboard", () => {
@@ -43,7 +45,7 @@ describe("<ChartView />", () => {
 
     render(<ChartView tracks={tracks} onTrackSelect={onTrackSelect} />);
 
-    fireEvent.keyDown(screen.getByRole("button", { name: /Фронтенд: уровень 1/ }), {
+    fireEvent.keyDown(screen.getByRole("button", { name: /Фронтенд: level 1/ }), {
       key: "Enter",
     });
 

@@ -1,6 +1,6 @@
 package career
 
-const Version = 1
+const Version = 2
 
 type Document struct {
 	Version  int            `json:"version"`
@@ -28,6 +28,7 @@ type Group struct {
 
 type Track struct {
 	ID          string  `json:"id"`
+	Code        string  `json:"code"`
 	Name        string  `json:"name"`
 	Description string  `json:"description"`
 	Levels      []Level `json:"levels"`

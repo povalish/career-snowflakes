@@ -5,6 +5,7 @@ export interface ChartViewLevel {
 
 export interface ChartViewTrack {
   id: string;
+  code: string;
   groupId: string;
   name: string;
   color: string;

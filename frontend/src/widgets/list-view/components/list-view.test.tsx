@@ -16,14 +16,14 @@ const groups: ListViewGroup[] = [
     tracks: [
       {
         id: "frontend",
-        index: 0,
+        code: "FE",
         name: "Фронтенд",
         progress: 2,
         levelCount: 4,
       },
       {
         id: "backend",
-        index: 1,
+        code: "BE",
         name: "Бэкенд",
         progress: 1,
         levelCount: 3,
@@ -37,7 +37,7 @@ const groups: ListViewGroup[] = [
     tracks: [
       {
         id: "mentoring",
-        index: 2,
+        code: "MNT",
         name: "Менторство",
         progress: 3,
         levelCount: 5,
@@ -60,7 +60,7 @@ describe("<ListView />", () => {
     expect(within(navigation).getAllByRole("listitem")).toHaveLength(3);
 
     for (const track of groups.flatMap((group) => group.tracks)) {
-      expect(within(navigation).getByText(String(track.index + 1).padStart(2, "0"))).toBeVisible();
+      expect(within(navigation).getByText(track.code)).toBeVisible();
       expect(within(navigation).getByText(track.name)).toBeVisible();
       expect(
         within(navigation).getByLabelText(`${track.progress} из ${track.levelCount} уровней`),

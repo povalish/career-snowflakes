@@ -17,8 +17,8 @@ func TestDecodeRejectsMalformedDocuments(t *testing.T) {
 		"null":             []byte("null"),
 		"broken json":      []byte("{"),
 		"trailing json":    append(append([]byte{}, valid...), []byte("{}")...),
-		"unknown field":    bytes.Replace(valid, []byte(`"version": 1`), []byte(`"version": 1, "unexpected": true`), 1),
-		"bad version":      bytes.Replace(valid, []byte(`"version": 1`), []byte(`"version": 2`), 1),
+		"unknown field":    bytes.Replace(valid, []byte(`"version": 2`), []byte(`"version": 2, "unexpected": true`), 1),
+		"bad version":      bytes.Replace(valid, []byte(`"version": 2`), []byte(`"version": 3`), 1),
 		"decimal progress": bytes.Replace(valid, []byte(`"progress": {}`), []byte(`"progress": {"frontend": 1.5}`), 1),
 		"invalid utf8":     {0xff},
 	}

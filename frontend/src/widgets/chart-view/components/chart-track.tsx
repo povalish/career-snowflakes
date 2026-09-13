@@ -37,8 +37,8 @@ export const ChartTrack: React.FC<IChartTrack> = ({
 
       {track.levels.map((level, levelIndex) => {
         const levelNumber = levelIndex + 1;
-        const levelLabel = `${track.name}: уровень ${levelNumber}, ${level.name}${
-          level.completed ? ", достигнут" : ""
+        const levelLabel = `${track.name}: level ${levelNumber}, ${level.name}${
+          level.completed ? ", completed" : ""
         }`;
 
         return (
@@ -71,11 +71,11 @@ export const ChartTrack: React.FC<IChartTrack> = ({
       <text
         x={label.x}
         y={label.y}
-        className="text-[10px] fill-muted-foreground [font-variant-numeric:tabular-nums]"
+        className="text-[10px] fill-muted-foreground"
         dominantBaseline="middle"
         textAnchor="middle"
       >
-        {String(trackIndex + 1).padStart(2, "0")}
+        {track.code}
       </text>
     </g>
   );

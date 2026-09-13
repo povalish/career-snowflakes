@@ -8,6 +8,7 @@ export function mapDocumentToChartTracks(document: Document): ChartViewTrack[] {
   return document.schema.groups.flatMap((group) =>
     group.tracks.map((track) => ({
       id: track.id,
+      code: track.code,
       groupId: group.id,
       name: track.name,
       color: group.color,

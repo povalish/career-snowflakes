@@ -15,9 +15,7 @@ export const Track: React.FC<ITrack> = ({ track, selected }) => {
       data-selected={selected}
       aria-current={selected ? "true" : undefined}
     >
-      <span className="text-[8px] [font-variant-numeric:tabular-nums] opacity-65">
-        {String(track.index + 1).padStart(2, "0")}
-      </span>
+      <span className="text-[8px] opacity-65">{track.code}</span>
       <span className="flex-1 wrap-anywhere">{track.name}</span>
       <span
         className="text-(--track-color) [font-variant-numeric:tabular-nums]"

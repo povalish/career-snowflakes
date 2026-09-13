@@ -1,6 +1,6 @@
 export interface ListViewTrack {
   id: string;
-  index: number;
+  code: string;
   name: string;
   progress: number;
   levelCount: number;

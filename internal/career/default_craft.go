@@ -1,34 +1,34 @@
 package career
 
 func craft() Group {
-	return Group{ID: "craft", Name: "Мастерство", Color: "blue", Tracks: []Track{
-		defaultTrack("delivery", "Результат", "Доведение работы до полезного результата в понятные сроки.", [5]string{
-			"Закончить небольшую задачу и проверить критерии приёмки вместе с коллегой.",
-			"Разбить задачу на шаги и заранее сообщить о препятствии.",
-			"Довести неоднозначную задачу от уточнения требований до проверки результата.",
-			"Помочь команде договориться о приоритетах и убрать повторяющуюся задержку.",
-			"Согласовать работу нескольких команд вокруг измеримого результата для пользователей.",
+	return Group{ID: "craft", Name: "Craft", Color: "blue", Tracks: []Track{
+		defaultTrack("delivery", "DLV", "Delivery", "Bringing work to a useful outcome within a clear timeframe.", [5]string{
+			"Complete a small task and verify its acceptance criteria with a colleague.",
+			"Break a task into steps and communicate a blocker early.",
+			"Take an ambiguous task from clarified requirements through result verification.",
+			"Help the team align priorities and remove a recurring delay.",
+			"Coordinate multiple teams around a measurable user outcome.",
 		}),
-		defaultTrack("communication", "Коммуникация", "Ясное обсуждение решений, ожиданий и обратной связи.", [5]string{
-			"Описать вопрос так, чтобы коллега мог воспроизвести проблему.",
-			"Дать содержательный статус задачи и конструктивный комментарий к коду.",
-			"Изложить варианты решения и помочь участникам договориться о следующем шаге.",
-			"Провести сложное обсуждение, сохранив ясность решений и уважение к участникам.",
-			"Улучшить обмен контекстом между командами и проверить, что договорённости работают.",
+		defaultTrack("communication", "COM", "Communication", "Clear discussion of decisions, expectations, and feedback.", [5]string{
+			"Describe a question so that a colleague can reproduce the problem.",
+			"Give a meaningful task update and constructive code feedback.",
+			"Present solution options and help participants agree on the next step.",
+			"Facilitate a difficult discussion while keeping decisions clear and participants respected.",
+			"Improve context sharing between teams and verify that agreements are working.",
 		}),
-		defaultTrack("quality", "Качество кода", "Простой и проверяемый код с ясными границами ответственности.", [5]string{
-			"Следовать соглашениям проекта и написать тест для исправленной ошибки.",
-			"Разделить смешанные обязанности и проверить важные граничные случаи.",
-			"Упростить сложный участок без изменения поведения и обосновать границы модулей.",
-			"Улучшить практику ревью и помочь команде снизить число повторяющихся дефектов.",
-			"Согласовать полезные стандарты качества между командами и оценить стоимость их поддержки.",
+		defaultTrack("quality", "QLT", "Code Quality", "Simple, testable code with clear boundaries of responsibility.", [5]string{
+			"Follow project conventions and write a test for a fixed defect.",
+			"Separate mixed responsibilities and verify important edge cases.",
+			"Simplify a complex area without changing behavior and justify module boundaries.",
+			"Improve review practices and help the team reduce recurring defects.",
+			"Align useful quality standards across teams and evaluate their maintenance cost.",
 		}),
-		defaultTrack("initiative", "Инициатива", "Самостоятельное обнаружение проблем и проверка полезности изменений.", [5]string{
-			"Заметить небольшую проблему и описать её влияние на работу.",
-			"Предложить улучшение и довести его до использования.",
-			"Проверить гипотезу, выбрать небольшой эксперимент и измерить результат.",
-			"Помочь коллегам предлагать улучшения и выделить время на самые полезные из них.",
-			"Запустить изменение, которое решает общую проблему нескольких команд.",
+		defaultTrack("initiative", "INI", "Initiative", "Independently identifying problems and validating the value of changes.", [5]string{
+			"Notice a small problem and describe its impact on the work.",
+			"Propose an improvement and bring it into use.",
+			"Validate a hypothesis, choose a small experiment, and measure the result.",
+			"Help colleagues propose improvements and make time for the most valuable ones.",
+			"Launch a change that solves a shared problem across multiple teams.",
 		}),
 	}}
 }

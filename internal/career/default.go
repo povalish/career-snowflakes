@@ -4,24 +4,24 @@ package career
 func Default() Document {
 	return Document{
 		Version:  Version,
-		Profile:  Profile{Name: "Мой профиль", Role: "Software Engineer"},
-		Schema:   Schema{Name: "Карта профессионального развития", Groups: []Group{technology(), craft(), leadership(), impact()}},
+		Profile:  Profile{Name: "My Profile", Role: "Software Engineer"},
+		Schema:   Schema{Name: "Professional Development Map", Groups: []Group{technology(), craft(), leadership(), impact()}},
 		Progress: map[string]int{},
 	}
 }
 
-func defaultTrack(id, name, description string, examples [5]string) Track {
-	names := [5]string{"Знакомство", "Практика", "Самостоятельность", "Развитие команды", "Системное влияние"}
+func defaultTrack(id, code, name, description string, examples [5]string) Track {
+	names := [5]string{"Introduction", "Practice", "Independence", "Team Growth", "Systemic Impact"}
 	descriptions := [5]string{
-		"Понимаете основные понятия и выполняете небольшие задачи с поддержкой коллег.",
-		"Применяете навык в привычных задачах, замечаете ограничения и запрашиваете обратную связь.",
-		"Самостоятельно решаете сложные задачи и объясняете свой выбор с учётом компромиссов.",
-		"Помогаете коллегам развивать этот навык и улучшаете подходы всей команды.",
-		"Создаёте устойчивые практики, полезные нескольким командам, и оцениваете их результат.",
+		"You understand the basic concepts and complete small tasks with support from colleagues.",
+		"You apply the skill to familiar tasks, recognize limitations, and ask for feedback.",
+		"You solve complex tasks independently and explain your decisions and trade-offs.",
+		"You help colleagues develop this skill and improve the team's practices.",
+		"You establish sustainable practices that benefit multiple teams and evaluate their impact.",
 	}
 	levels := make([]Level, len(names))
 	for i := range levels {
 		levels[i] = Level{Name: names[i], Description: descriptions[i], Examples: []string{examples[i]}}
 	}
-	return Track{ID: id, Name: name, Description: description, Levels: levels}
+	return Track{ID: id, Code: code, Name: name, Description: description, Levels: levels}
 }

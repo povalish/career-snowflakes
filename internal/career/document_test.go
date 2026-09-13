@@ -19,6 +19,9 @@ func TestDefaultDocument(t *testing.T) {
 			t.Fatalf("%s: expected four tracks", group.Name)
 		}
 		for _, track := range group.Tracks {
+			if !validTrackCode.MatchString(track.Code) {
+				t.Fatalf("%s: invalid track code %q", track.Name, track.Code)
+			}
 			if len(track.Levels) != 5 {
 				t.Fatalf("%s: expected five levels", track.Name)
 			}
@@ -46,6 +49,8 @@ func TestValidationRejectsInvalidDocuments(t *testing.T) {
 		{"no tracks", func(d *Document) { d.Schema.Groups[0].Tracks = nil }},
 		{"too many group tracks", func(d *Document) { d.Schema.Groups[0].Tracks = make([]Track, MaxTracks+1) }},
 		{"empty track", func(d *Document) { d.Schema.Groups[0].Tracks[0].Name = "" }},
+		{"invalid track code", func(d *Document) { d.Schema.Groups[0].Tracks[0].Code = "frontend" }},
+		{"duplicate track code", func(d *Document) { d.Schema.Groups[1].Tracks[0].Code = "FE" }},
 		{"long description", func(d *Document) { d.Schema.Groups[0].Tracks[0].Description = strings.Repeat("a", 4001) }},
 		{"no levels", func(d *Document) { d.Schema.Groups[0].Tracks[0].Levels = nil }},
 		{"too many levels", func(d *Document) { d.Schema.Groups[0].Tracks[0].Levels = make([]Level, MaxLevels+1) }},

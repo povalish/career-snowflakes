@@ -15,6 +15,7 @@ const (
 )
 
 var validID = regexp.MustCompile(`^[a-zA-Z0-9_-]{1,64}$`)
+var validTrackCode = regexp.MustCompile(`^[A-Z]{2,3}$`)
 var colors = []string{"red", "green", "yellow", "blue", "purple", "aqua", "orange"}
 
 func (d Document) Validate() error {
@@ -32,9 +33,10 @@ func (d Document) Validate() error {
 		return fmt.Errorf("схема должна содержать от 1 до %d направлений", MaxGroups)
 	}
 	ids := map[string]bool{}
+	codes := map[string]bool{}
 	tracks := map[string]int{}
 	for _, group := range d.Schema.Groups {
-		if err := validateGroup(group, ids, tracks); err != nil {
+		if err := validateGroup(group, ids, codes, tracks); err != nil {
 			return err
 		}
 	}
@@ -53,7 +55,7 @@ func (d Document) Validate() error {
 	return nil
 }
 
-func validateGroup(group Group, ids map[string]bool, tracks map[string]int) error {
+func validateGroup(group Group, ids, codes map[string]bool, tracks map[string]int) error {
 	if err := uniqueID(group.ID, ids); err != nil {
 		return err
 	}
@@ -67,7 +69,7 @@ func validateGroup(group Group, ids map[string]bool, tracks map[string]int) erro
 		return fmt.Errorf("направление %q должно содержать от 1 до %d треков", group.Name, MaxTracks)
 	}
 	for _, track := range group.Tracks {
-		if err := validateTrack(track, ids); err != nil {
+		if err := validateTrack(track, ids, codes); err != nil {
 			return err
 		}
 		tracks[track.ID] = len(track.Levels)
@@ -75,10 +77,17 @@ func validateGroup(group Group, ids map[string]bool, tracks map[string]int) erro
 	return nil
 }
 
-func validateTrack(track Track, ids map[string]bool) error {
+func validateTrack(track Track, ids, codes map[string]bool) error {
 	if err := uniqueID(track.ID, ids); err != nil {
 		return err
 	}
+	if !validTrackCode.MatchString(track.Code) {
+		return fmt.Errorf("код трека %q должен содержать 2–3 заглавные латинские буквы", track.Name)
+	}
+	if codes[track.Code] {
+		return fmt.Errorf("код трека %q повторяется", track.Code)
+	}
+	codes[track.Code] = true
 	if err := textLength("название трека", track.Name, 120, true); err != nil {
 		return err
 	}

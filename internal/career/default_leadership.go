@@ -1,34 +1,34 @@
 package career
 
 func leadership() Group {
-	return Group{ID: "leadership", Name: "Лидерство", Color: "purple", Tracks: []Track{
-		defaultTrack("growth", "Развитие", "Осознанное обучение и применение новых знаний в работе.", [5]string{
-			"Выбрать навык для развития и договориться о понятном следующем шаге.",
-			"Применить изученный подход в задаче и получить обратную связь.",
-			"Составить план развития на основе реальных пробелов и пересмотреть его по результатам.",
-			"Помочь коллегам связать цели обучения с задачами и возможностями команды.",
-			"Создать практику обмена знаниями, которая продолжает работать без постоянного участия автора.",
+	return Group{ID: "leadership", Name: "Leadership", Color: "purple", Tracks: []Track{
+		defaultTrack("growth", "GRW", "Growth", "Intentional learning and application of new knowledge at work.", [5]string{
+			"Choose a skill to develop and agree on a clear next step.",
+			"Apply a learned approach to a task and get feedback.",
+			"Create a development plan based on real gaps and revise it using the results.",
+			"Help colleagues connect learning goals with team tasks and opportunities.",
+			"Create a knowledge-sharing practice that continues without its author being constantly involved.",
 		}),
-		defaultTrack("organisation", "Организация", "Понятное распределение ответственности и улучшение совместной работы.", [5]string{
-			"Понимать, кто принимает решения по задаче, и вовремя обращаться к нужному человеку.",
-			"Уточнить зависимости своей работы и согласовать ожидания с участниками.",
-			"Организовать работу небольшой группы с ясными решениями и владельцами действий.",
-			"Устранить повторяющийся организационный барьер и проверить улучшение на практике.",
-			"Согласовать устойчивые границы ответственности между несколькими командами.",
+		defaultTrack("organisation", "ORG", "Organization", "Clear ownership and better collaboration.", [5]string{
+			"Understand who makes decisions for a task and contact the right person in time.",
+			"Clarify dependencies and align expectations with everyone involved.",
+			"Organize a small group's work with clear decisions and action owners.",
+			"Remove a recurring organizational barrier and verify the improvement in practice.",
+			"Establish sustainable ownership boundaries across multiple teams.",
 		}),
-		defaultTrack("wellbeing", "Устойчивый темп", "Здоровая нагрузка, уважительная среда и долгосрочная работоспособность.", [5]string{
-			"Обсудить реалистичную нагрузку и вовремя сообщить о нехватке времени.",
-			"Планировать работу с учётом отдыха и замечать признаки перегрузки.",
-			"Обсудить конфликт приоритетов и предложить устойчивый объём обязательств.",
-			"Помочь команде сократить систематические переработки и улучшить дежурства.",
-			"Изменить организационную практику, которая создаёт длительную перегрузку нескольких команд.",
+		defaultTrack("wellbeing", "WLB", "Sustainable Pace", "Healthy workload, a respectful environment, and long-term effectiveness.", [5]string{
+			"Discuss a realistic workload and communicate time constraints early.",
+			"Plan work with rest in mind and recognize signs of overload.",
+			"Discuss conflicting priorities and propose a sustainable set of commitments.",
+			"Help the team reduce systemic overtime and improve on-call practices.",
+			"Change an organizational practice that creates prolonged overload across multiple teams.",
 		}),
-		defaultTrack("ownership", "Ответственность", "Забота о результате и последствиях решений на всём жизненном цикле продукта.", [5]string{
-			"Проверить свою работу после выпуска и исправить обнаруженную ошибку.",
-			"Сопровождать функциональность и поддерживать актуальную документацию.",
-			"Оценивать риски изменений и координировать восстановление при сбое.",
-			"Сделать владение компонентами понятным и улучшить работу команды с инцидентами.",
-			"Устранить системный риск продукта и согласовать долгосрочный план его поддержки.",
+		defaultTrack("ownership", "OWN", "Ownership", "Caring for outcomes and the consequences of decisions throughout the product lifecycle.", [5]string{
+			"Check your work after release and fix a discovered defect.",
+			"Maintain a feature and keep its documentation up to date.",
+			"Assess change risks and coordinate recovery from a failure.",
+			"Clarify component ownership and improve the team's incident response.",
+			"Remove a systemic product risk and align a long-term support plan.",
 		}),
 	}}
 }

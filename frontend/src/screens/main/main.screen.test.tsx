@@ -20,10 +20,10 @@ describe("<MainScreen />", () => {
   it("highlights the track whose chart level was selected", () => {
     render(<MainScreen />);
 
-    fireEvent.click(screen.getByRole("button", { name: /Бэкенд: уровень 1/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Backend: level 1/ }));
 
     expect(documentService.selectedTrackId).toBe("backend");
-    expect(screen.getByText("Бэкенд").parentElement).toHaveAttribute("aria-current", "true");
-    expect(screen.getByText("Интерфейсы").parentElement).not.toHaveAttribute("aria-current");
+    expect(screen.getByText("Backend").parentElement).toHaveAttribute("aria-current", "true");
+    expect(screen.getByText("Frontend").parentElement).not.toHaveAttribute("aria-current");
   });
 });

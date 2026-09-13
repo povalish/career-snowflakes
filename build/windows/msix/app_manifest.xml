@@ -8,15 +8,15 @@
   IgnorableNamespaces="uap3">
   
   <Identity 
-    Name="com.go-translate.careersnowflakes"
-    Publisher="CN=My Company"
+    Name="app.careersnowflakes.desktop"
+    Publisher="CN=Career Snowflakes"
     Version="0.1.0.0" 
     ProcessorArchitecture="arm64" />
   
   <Properties>
-    <DisplayName>My Product</DisplayName>
-    <PublisherDisplayName>My Company</PublisherDisplayName>
-    <Description>A career-snowflakes application</Description>
+    <DisplayName>Career Snowflakes</DisplayName>
+    <PublisherDisplayName>Career Snowflakes</PublisherDisplayName>
+    <Description>A personal career development map</Description>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   
@@ -29,10 +29,10 @@
   </Resources>
   
   <Applications>
-    <Application Id="com.go-translate.careersnowflakes" Executable="career-snowflakes" EntryPoint="Windows.FullTrustApplication">
+    <Application Id="app.careersnowflakes.desktop" Executable="career-snowflakes" EntryPoint="Windows.FullTrustApplication">
       <uap:VisualElements
-        DisplayName="My Product"
-        Description="A career-snowflakes application"
+        DisplayName="Career Snowflakes"
+        Description="A personal career development map"
         BackgroundColor="transparent"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png">

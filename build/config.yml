@@ -9,10 +9,10 @@ info:
   productName: "Career Snowflakes"
   productIdentifier: "app.careersnowflakes.desktop"
   description: "A personal career development map"
-  copyright: "(c) 2026, Career Snowflakes"
+  copyright: "© 2026 Career Snowflakes"
   comments: "Local career development tracker"
   version: "0.1.0"
-  # cfBundleIconName: "appicon" # The macOS icon name in Assets.car icon bundles (optional)
+  cfBundleIconName: "appicon" # The macOS icon name in Assets.car icon bundles (optional)
   #                               # Should match the name of your .icon file without the extension
   #                               # If not set and Assets.car exists, defaults to "appicon"
 
@@ -73,7 +73,3 @@ fileAssociations:
 #    iconName: jpegFileIcon
 #    role: Editor
 #    mimeType: image/jpeg  # (optional)
-
-# Other data
-other:
-  - name: My Other Data

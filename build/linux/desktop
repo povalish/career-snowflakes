@@ -1,7 +1,7 @@
 [Desktop Entry]
 Version=1.0
-Name=My Product
-Comment=A career-snowflakes application
+Name=Career Snowflakes
+Comment=A personal career development map
 # The Exec line includes %u to pass the URL to the application
 Exec=/usr/local/bin/career-snowflakes %u
 Terminal=false

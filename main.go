@@ -14,6 +14,9 @@ import (
 //go:embed all:frontend/dist
 var assets embed.FS
 
+//go:embed build/appicon.png
+var appIcon []byte
+
 func main() {
 	configDir, err := os.UserConfigDir()
 	if err != nil {
@@ -23,12 +26,13 @@ func main() {
 	app := application.New(application.Options{
 		Name:        "Career Snowflakes",
 		Description: "Наглядная карта профессионального развития",
+		Icon:        appIcon,
 		Services:    []application.Service{application.NewService(service)},
 		Assets:      application.AssetOptions{Handler: application.AssetFileServerFS(assets)},
 		Mac:         application.MacOptions{ApplicationShouldTerminateAfterLastWindowClosed: true},
 	})
 	window := app.Window.NewWithOptions(application.WebviewWindowOptions{
-		// Title:            "Software Engineer Track",
+		Title:            "Career Snowflakes",
 		Width:            1380,
 		Height:           920,
 		MinWidth:         760,

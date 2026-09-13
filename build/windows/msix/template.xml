@@ -10,24 +10,24 @@
     <Installer
         Path="career-snowflakes"
         Arguments=""
-        InstallLocation="C:\Program Files\My Company\My Product">
+        InstallLocation="C:\Program Files\Career Snowflakes">
     </Installer>
     <PackageInformation
-        PackageName="My Product"
-        PackageDisplayName="My Product"
-        PublisherName="CN=My Company"
-        PublisherDisplayName="My Company"
+        PackageName="Career Snowflakes"
+        PackageDisplayName="Career Snowflakes"
+        PublisherName="CN=Career Snowflakes"
+        PublisherDisplayName="Career Snowflakes"
         Version="0.1.0.0"
-        PackageDescription="A career-snowflakes application">
+        PackageDescription="A personal career development map">
         <Capabilities>
             <Capability Name="runFullTrust" />
             
         </Capabilities>
         <Applications>
             <Application
-                Id="com.go-translate.careersnowflakes"
-                Description="A career-snowflakes application"
-                DisplayName="My Product"
+                Id="app.careersnowflakes.desktop"
+                Description="A personal career development map"
+                DisplayName="Career Snowflakes"
                 ExecutableName="career-snowflakes"
                 EntryPoint="Windows.FullTrustApplication">
                 
@@ -41,9 +41,9 @@
         </Dependencies>
         <Properties>
             <Framework>false</Framework>
-            <DisplayName>My Product</DisplayName>
-            <PublisherDisplayName>My Company</PublisherDisplayName>
-            <Description>A career-snowflakes application</Description>
+            <DisplayName>Career Snowflakes</DisplayName>
+            <PublisherDisplayName>Career Snowflakes</PublisherDisplayName>
+            <Description>A personal career development map</Description>
             <Logo>Assets\AppIcon.png</Logo>
         </Properties>
     </PackageInformation>

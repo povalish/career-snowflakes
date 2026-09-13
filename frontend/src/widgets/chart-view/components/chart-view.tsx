@@ -7,9 +7,10 @@ import { ChartTrack } from "./chart-track";
 
 export interface IChartView {
   tracks: readonly ChartViewTrack[];
+  onTrackSelect: (trackId: string) => void;
 }
 
-export const ChartView: React.FC<IChartView> = ({ tracks }) => {
+export const ChartView: React.FC<IChartView> = ({ tracks, onTrackSelect }) => {
   if (tracks.length === 0) return null;
 
   const angle = 360 / tracks.length;
@@ -43,6 +44,7 @@ export const ChartView: React.FC<IChartView> = ({ tracks }) => {
           ringWidth={ringWidth}
           startsGroup={tracks[trackIndex - 1]?.groupId !== track.groupId}
           endsGroup={tracks[trackIndex + 1]?.groupId !== track.groupId}
+          onSelect={onTrackSelect}
         />
       ))}
     </svg>

@@ -7,9 +7,10 @@ import { Track } from "./track";
 
 export interface IListView {
   groups: readonly ListViewGroup[];
+  selectedTrackId: string | null;
 }
 
-export const ListView: React.FC<IListView> = ({ groups }) => {
+export const ListView: React.FC<IListView> = ({ groups, selectedTrackId }) => {
   if (groups.length === 0) return null;
 
   return (
@@ -30,7 +31,7 @@ export const ListView: React.FC<IListView> = ({ groups }) => {
             <ul className="m-0 list-none p-0">
               {group.tracks.map((track) => (
                 <li key={track.id}>
-                  <Track track={track} />
+                  <Track track={track} selected={track.id === selectedTrackId} />
                 </li>
               ))}
             </ul>

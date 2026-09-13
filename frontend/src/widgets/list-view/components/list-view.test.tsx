@@ -51,7 +51,7 @@ const groups: ListViewGroup[] = [
 
 describe("<ListView />", () => {
   it("renders every group and all track data", () => {
-    render(<ListView groups={groups} />);
+    render(<ListView groups={groups} selectedTrackId="backend" />);
 
     const navigation = screen.getByRole("navigation", { name: "Треки развития" });
 
@@ -66,5 +66,13 @@ describe("<ListView />", () => {
         within(navigation).getByLabelText(`${track.progress} из ${track.levelCount} уровней`),
       ).toHaveTextContent(`${track.progress}/${track.levelCount}`);
     }
+
+    expect(within(navigation).getByText("Бэкенд").parentElement).toHaveAttribute(
+      "aria-current",
+      "true",
+    );
+    expect(within(navigation).getByText("Фронтенд").parentElement).not.toHaveAttribute(
+      "aria-current",
+    );
   });
 });

@@ -39,7 +39,3 @@ export function fromServiceDocument(document: ServiceDocument): Document {
     progress: fromServiceProgress(document.progress),
   };
 }
-
-export function getErrorMessage(cause: unknown): string {
-  return cause instanceof Error ? cause.message : String(cause);
-}

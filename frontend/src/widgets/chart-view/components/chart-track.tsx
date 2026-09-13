@@ -1,3 +1,4 @@
+/* oxlint-disable jsx-a11y/prefer-tag-over-role -- Interactive SVG paths have no native HTML equivalent. */
 import { CHART_COLOR_CLASSES, CHART_INNER_RADIUS } from "../constants/chart.constants";
 import type { ChartViewTrack } from "../types/chart-view.types";
 import { polarPoint, sectorPath } from "../utils/chart.utils";
@@ -12,6 +13,7 @@ interface IChartTrack {
   ringWidth: number;
   startsGroup: boolean;
   endsGroup: boolean;
+  onSelect: (trackId: string) => void;
 }
 
 export const ChartTrack: React.FC<IChartTrack> = ({
@@ -21,6 +23,7 @@ export const ChartTrack: React.FC<IChartTrack> = ({
   ringWidth,
   startsGroup,
   endsGroup,
+  onSelect,
 }) => {
   const colorClass = CHART_COLOR_CLASSES[track.color] ?? CHART_COLOR_CLASSES.aqua;
   const startAngle = trackIndex * angle + (startsGroup ? 1 : 0.35);
@@ -34,6 +37,9 @@ export const ChartTrack: React.FC<IChartTrack> = ({
 
       {track.levels.map((level, levelIndex) => {
         const levelNumber = levelIndex + 1;
+        const levelLabel = `${track.name}: уровень ${levelNumber}, ${level.name}${
+          level.completed ? ", достигнут" : ""
+        }`;
 
         return (
           <path
@@ -44,13 +50,20 @@ export const ChartTrack: React.FC<IChartTrack> = ({
               startAngle,
               endAngle,
             )}
-            className="fill-muted data-[completed=true]:fill-(--track-color)"
+            className="cursor-pointer fill-muted outline-none transition-opacity data-[completed=true]:fill-(--track-color) hover:opacity-80 focus-visible:stroke-foreground focus-visible:stroke-2"
             data-completed={level.completed}
+            role="button"
+            tabIndex={0}
+            aria-label={levelLabel}
+            onClick={() => onSelect(track.id)}
+            onKeyDown={(event) => {
+              if (event.key !== "Enter" && event.key !== " ") return;
+
+              event.preventDefault();
+              onSelect(track.id);
+            }}
           >
-            <title>
-              {track.name}: уровень {levelNumber}, {level.name}
-              {level.completed ? ", достигнут" : ""}
-            </title>
+            <title>{levelLabel}</title>
           </path>
         );
       })}

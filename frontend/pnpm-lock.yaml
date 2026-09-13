@@ -190,6 +190,9 @@ importers:
       mobx:
         specifier: ^7.0.3
         version: 7.0.3
+      mobx-react-lite:
+        specifier: ^5.0.3
+        version: 5.0.3(mobx@7.0.3)(react@19.2.8)
       react:
         specifier: ^19.2.8
         version: 19.2.8
@@ -2291,6 +2294,12 @@ packages:
 
   minimist@1.2.8:
     resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
+
+  mobx-react-lite@5.0.3:
+    resolution: {integrity: sha512-8qT/d/8Cg8ljt+heKhoFHNoqgedyeSGzdTixT0lgbFMMFlWfHUcXHZ8UD63eQi3ELjkxaH1VU07lXWhRwM0cVA==}
+    peerDependencies:
+      mobx: ^7.0.0
+      react: ^18 || ^19
 
   mobx@7.0.3:
     resolution: {integrity: sha512-KopyyzqZ8xT1fqxFNl8ItKKMpGifRe2ySaNAHs80/cx0mL1bpJtJ46S+FSyzXKRjW0TODWj5zwq/Y9hUdJUy4w==}
@@ -4587,6 +4596,11 @@ snapshots:
       brace-expansion: 5.0.9
 
   minimist@1.2.8: {}
+
+  mobx-react-lite@5.0.3(mobx@7.0.3)(react@19.2.8):
+    dependencies:
+      mobx: 7.0.3
+      react: 19.2.8
 
   mobx@7.0.3: {}
 

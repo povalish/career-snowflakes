@@ -27,6 +27,7 @@
     "cn": "^0.2.6",
     "lucide-react": "^1.42.0",
     "mobx": "^7.0.3",
+    "mobx-react-lite": "^5.0.3",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-hook-form": "^7.87.0",

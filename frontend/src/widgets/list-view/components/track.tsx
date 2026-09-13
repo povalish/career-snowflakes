@@ -5,11 +5,16 @@ import type { ListViewTrack } from "../types/list-view.types";
 
 interface ITrack {
   track: ListViewTrack;
+  selected: boolean;
 }
 
-export const Track: React.FC<ITrack> = ({ track }) => {
+export const Track: React.FC<ITrack> = ({ track, selected }) => {
   return (
-    <div className="flex w-full items-center gap-1.75 px-2 py-1.5 text-[10px] text-muted-foreground min-[1400px]:py-1.75 min-[1400px]:text-[11px]">
+    <div
+      className="flex w-full items-center gap-1.75 px-2 py-1.5 text-[10px] text-muted-foreground data-[selected=true]:rounded-sm data-[selected=true]:bg-muted data-[selected=true]:text-foreground data-[selected=true]:shadow-[inset_2px_0_0_var(--track-color)] min-[1400px]:py-1.75 min-[1400px]:text-[11px]"
+      data-selected={selected}
+      aria-current={selected ? "true" : undefined}
+    >
       <span className="text-[8px] [font-variant-numeric:tabular-nums] opacity-65">
         {String(track.index + 1).padStart(2, "0")}
       </span>

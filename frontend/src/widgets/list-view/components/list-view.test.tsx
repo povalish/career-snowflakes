@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom/vitest";
-import { render, screen, within } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { fireEvent, render, screen, within } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
 
 import type { ListViewGroup } from "../types/list-view.types";
 import { ListView } from "./list-view";
@@ -51,7 +51,9 @@ const groups: ListViewGroup[] = [
 
 describe("<ListView />", () => {
   it("renders every group and all track data", () => {
-    render(<ListView groups={groups} selectedTrackId="backend" />);
+    const onTrackSelect = vi.fn<(trackId: string) => void>();
+
+    render(<ListView groups={groups} selectedTrackId="backend" onTrackSelect={onTrackSelect} />);
 
     const navigation = screen.getByRole("navigation", { name: "Треки развития" });
 
@@ -74,5 +76,9 @@ describe("<ListView />", () => {
     expect(within(navigation).getByText("Фронтенд").parentElement).not.toHaveAttribute(
       "aria-current",
     );
+
+    fireEvent.click(within(navigation).getByRole("button", { name: /Открыть Фронтенд/ }));
+
+    expect(onTrackSelect).toHaveBeenCalledWith("frontend");
   });
 });

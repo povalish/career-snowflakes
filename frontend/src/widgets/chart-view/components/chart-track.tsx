@@ -2,6 +2,7 @@
 import { CHART_COLOR_CLASSES, CHART_INNER_RADIUS } from "../constants/chart.constants";
 import type { ChartViewTrack } from "../types/chart-view.types";
 import { polarPoint, sectorPath } from "../utils/chart.utils";
+import { sector, trackDot } from "./chart-track.classes";
 
 //
 //
@@ -13,7 +14,7 @@ interface IChartTrack {
   ringWidth: number;
   startsGroup: boolean;
   endsGroup: boolean;
-  onSelect: (trackId: string) => void;
+  onSelect: (trackId: string, level: number) => void;
 }
 
 export const ChartTrack: React.FC<IChartTrack> = ({
@@ -33,7 +34,7 @@ export const ChartTrack: React.FC<IChartTrack> = ({
 
   return (
     <g className={colorClass}>
-      <circle cx={dot.x} cy={dot.y} r="5" className="fill-(--track-color)" />
+      <circle cx={dot.x} cy={dot.y} r="5" className={trackDot()} />
 
       {track.levels.map((level, levelIndex) => {
         const levelNumber = levelIndex + 1;
@@ -50,17 +51,17 @@ export const ChartTrack: React.FC<IChartTrack> = ({
               startAngle,
               endAngle,
             )}
-            className="cursor-pointer fill-muted outline-none transition-opacity data-[completed=true]:fill-(--track-color) hover:opacity-80 focus-visible:stroke-foreground focus-visible:stroke-2"
+            className={sector()}
             data-completed={level.completed}
             role="button"
             tabIndex={0}
             aria-label={levelLabel}
-            onClick={() => onSelect(track.id)}
+            onClick={() => onSelect(track.id, levelNumber)}
             onKeyDown={(event) => {
               if (event.key !== "Enter" && event.key !== " ") return;
 
               event.preventDefault();
-              onSelect(track.id);
+              onSelect(track.id, levelNumber);
             }}
           >
             <title>{levelLabel}</title>

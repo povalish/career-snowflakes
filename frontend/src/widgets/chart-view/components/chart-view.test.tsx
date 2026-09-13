@@ -29,26 +29,26 @@ afterEach(cleanup);
 
 describe("<ChartView />", () => {
   it("reports the track when a level is selected", () => {
-    const onTrackSelect = vi.fn<(trackId: string) => void>();
+    const onLevelSelect = vi.fn<(trackId: string, level: number) => void>();
 
-    render(<ChartView tracks={tracks} onTrackSelect={onTrackSelect} />);
+    render(<ChartView tracks={tracks} onLevelSelect={onLevelSelect} />);
 
     fireEvent.click(screen.getByRole("button", { name: /Фронтенд: level 2/ }));
 
-    expect(onTrackSelect).toHaveBeenCalledOnce();
-    expect(onTrackSelect).toHaveBeenCalledWith("frontend");
+    expect(onLevelSelect).toHaveBeenCalledOnce();
+    expect(onLevelSelect).toHaveBeenCalledWith("frontend", 2);
     expect(screen.getByText("FE")).toBeVisible();
   });
 
   it("supports selecting a level from the keyboard", () => {
-    const onTrackSelect = vi.fn<(trackId: string) => void>();
+    const onLevelSelect = vi.fn<(trackId: string, level: number) => void>();
 
-    render(<ChartView tracks={tracks} onTrackSelect={onTrackSelect} />);
+    render(<ChartView tracks={tracks} onLevelSelect={onLevelSelect} />);
 
     fireEvent.keyDown(screen.getByRole("button", { name: /Фронтенд: level 1/ }), {
       key: "Enter",
     });
 
-    expect(onTrackSelect).toHaveBeenCalledWith("frontend");
+    expect(onLevelSelect).toHaveBeenCalledWith("frontend", 1);
   });
 });

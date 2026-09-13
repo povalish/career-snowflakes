@@ -1,16 +1,17 @@
 import { CHART_CENTER, CHART_INNER_RADIUS, CHART_OUTER_RADIUS } from "../constants/chart.constants";
 import type { ChartViewTrack } from "../types/chart-view.types";
 import { ChartTrack } from "./chart-track";
+import { chart, guideRing } from "./chart-view.classes";
 
 //
 //
 
 export interface IChartView {
   tracks: readonly ChartViewTrack[];
-  onTrackSelect: (trackId: string) => void;
+  onLevelSelect: (trackId: string, level: number) => void;
 }
 
-export const ChartView: React.FC<IChartView> = ({ tracks, onTrackSelect }) => {
+export const ChartView: React.FC<IChartView> = ({ tracks, onLevelSelect }) => {
   if (tracks.length === 0) return null;
 
   const angle = 360 / tracks.length;
@@ -19,7 +20,7 @@ export const ChartView: React.FC<IChartView> = ({ tracks, onTrackSelect }) => {
 
   return (
     <svg
-      className="block w-full overflow-visible"
+      className={chart()}
       viewBox="0 0 600 600"
       aria-labelledby="career-chart-title career-chart-description"
     >
@@ -28,12 +29,7 @@ export const ChartView: React.FC<IChartView> = ({ tracks, onTrackSelect }) => {
         Заполненные цветом секторы показывают достигнутые уровни по карьерным направлениям.
       </desc>
 
-      <circle
-        cx={CHART_CENTER}
-        cy={CHART_CENTER}
-        r="243"
-        className="fill-none [stroke-dasharray:2_5] stroke-[0.8] stroke-border"
-      />
+      <circle cx={CHART_CENTER} cy={CHART_CENTER} r="243" className={guideRing()} />
 
       {tracks.map((track, trackIndex) => (
         <ChartTrack
@@ -44,7 +40,7 @@ export const ChartView: React.FC<IChartView> = ({ tracks, onTrackSelect }) => {
           ringWidth={ringWidth}
           startsGroup={tracks[trackIndex - 1]?.groupId !== track.groupId}
           endsGroup={tracks[trackIndex + 1]?.groupId !== track.groupId}
-          onSelect={onTrackSelect}
+          onSelect={onLevelSelect}
         />
       ))}
     </svg>

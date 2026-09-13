@@ -28,7 +28,7 @@ func main() {
 		Mac:         application.MacOptions{ApplicationShouldTerminateAfterLastWindowClosed: true},
 	})
 	window := app.Window.NewWithOptions(application.WebviewWindowOptions{
-		Title:            "Software Engineer Track",
+		// Title:            "Software Engineer Track",
 		Width:            1380,
 		Height:           920,
 		MinWidth:         760,

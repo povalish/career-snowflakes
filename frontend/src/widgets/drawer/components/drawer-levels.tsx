@@ -19,7 +19,7 @@ export const DrawerLevels: React.FC<IDrawerLevels> = ({
   onSelectLevel,
 }) => {
   return (
-    <div className={levelList()} aria-label="Уровни трека">
+    <div className={levelList()} aria-label="Track levels">
       {levels.map((level, index) => {
         const levelNumber = index + 1;
 
@@ -28,7 +28,7 @@ export const DrawerLevels: React.FC<IDrawerLevels> = ({
             key={levelNumber}
             type="button"
             className={levelButton()}
-            aria-label={`Уровень ${levelNumber}: ${level.name}`}
+            aria-label={`Level ${levelNumber}: ${level.name}`}
             aria-pressed={selectedLevel === levelNumber}
             data-completed={progress >= levelNumber}
             onClick={() => onSelectLevel(levelNumber)}

@@ -33,16 +33,16 @@ export const DrawerFooter: React.FC<IDrawerFooter> = ({ busy, level, progress, o
           {progress === level ? (
             <>
               <Check className={icon()} />
-              Текущий уровень
+              Current level
             </>
           ) : (
             <>
-              Установить уровень {level}
+              Set level {level}
               <ArrowUpRight className={icon()} />
             </>
           )}
         </button>
-        <p className={helperText()}>Предыдущие этапы также считаются достигнутыми.</p>
+        <p className={helperText()}>Earlier stages are also considered completed.</p>
         {progress > 0 && (
           <button
             type="button"
@@ -51,7 +51,7 @@ export const DrawerFooter: React.FC<IDrawerFooter> = ({ busy, level, progress, o
             onClick={() => onSetProgress(0)}
           >
             <RotateCcw className={resetIcon()} />
-            Сбросить прогресс трека
+            Reset track progress
           </button>
         )}
       </div>

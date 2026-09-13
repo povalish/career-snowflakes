@@ -13,11 +13,11 @@ const tracks: ChartViewTrack[] = [
     id: "frontend",
     code: "FE",
     groupId: "engineering",
-    name: "Фронтенд",
+    name: "Frontend",
     color: "aqua",
     levels: [
-      { name: "Основы", completed: true },
-      { name: "Архитектура", completed: false },
+      { name: "Foundations", completed: true },
+      { name: "Architecture", completed: false },
     ],
   },
 ];
@@ -33,7 +33,7 @@ describe("<ChartView />", () => {
 
     render(<ChartView tracks={tracks} onLevelSelect={onLevelSelect} />);
 
-    fireEvent.click(screen.getByRole("button", { name: /Фронтенд: level 2/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Frontend: level 2/ }));
 
     expect(onLevelSelect).toHaveBeenCalledOnce();
     expect(onLevelSelect).toHaveBeenCalledWith("frontend", 2);
@@ -45,7 +45,7 @@ describe("<ChartView />", () => {
 
     render(<ChartView tracks={tracks} onLevelSelect={onLevelSelect} />);
 
-    fireEvent.keyDown(screen.getByRole("button", { name: /Фронтенд: level 1/ }), {
+    fireEvent.keyDown(screen.getByRole("button", { name: /Frontend: level 1/ }), {
       key: "Enter",
     });
 

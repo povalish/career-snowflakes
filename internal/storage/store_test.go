@@ -97,6 +97,43 @@ func TestCorruptStoredFileIsNotOverwritten(t *testing.T) {
 	}
 }
 
+func TestSaveCanReplaceVersionOneDocument(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "career.json")
+	writeBytes(t, path, []byte(`{
+  "version": 1,
+  "profile": {"name": "Legacy profile", "role": "Software Engineer"},
+  "schema": {
+    "name": "Legacy matrix",
+    "groups": [{
+      "id": "technology",
+      "name": "Technology",
+      "color": "aqua",
+      "tracks": [{
+        "id": "frontend",
+        "name": "Frontend",
+        "description": "Default track",
+        "levels": [{"name": "Level 1", "description": "", "examples": []}]
+      }]
+    }]
+  },
+  "progress": {"frontend": 1}
+}`))
+
+	document := career.Default()
+	document.Progress["frontend"] = 2
+	if _, err := New(path).Save(document); err != nil {
+		t.Fatal(err)
+	}
+
+	saved, err := New(path).Load()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if saved.Version != career.Version || saved.Progress["frontend"] != 2 {
+		t.Fatal("save must replace a valid version one document")
+	}
+}
+
 func TestConcurrentSavesLeaveValidDocument(t *testing.T) {
 	store := New(filepath.Join(t.TempDir(), "career.json"))
 	var tasks sync.WaitGroup

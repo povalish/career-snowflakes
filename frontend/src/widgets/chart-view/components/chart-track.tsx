@@ -1,5 +1,7 @@
 /* oxlint-disable jsx-a11y/prefer-tag-over-role -- Interactive SVG paths have no native HTML equivalent. */
-import { CHART_COLOR_CLASSES, CHART_INNER_RADIUS } from "../constants/chart.constants";
+import { TRACK_COLOR_CLASSES } from "@/shared/config/track-colors";
+
+import { CHART_INNER_RADIUS } from "../constants/chart.constants";
 import type { ChartViewTrack } from "../types/chart-view.types";
 import { polarPoint, sectorPath } from "../utils/chart.utils";
 import { sector, trackDot } from "./chart-track.classes";
@@ -26,7 +28,7 @@ export const ChartTrack: React.FC<IChartTrack> = ({
   endsGroup,
   onSelect,
 }) => {
-  const colorClass = CHART_COLOR_CLASSES[track.color] ?? CHART_COLOR_CLASSES.aqua;
+  const colorClass = TRACK_COLOR_CLASSES[track.color] ?? TRACK_COLOR_CLASSES.aqua;
   const startAngle = trackIndex * angle + (startsGroup ? 1 : 0.35);
   const endAngle = (trackIndex + 1) * angle - (endsGroup ? 1 : 0.35);
   const dot = polarPoint(52, (trackIndex + 0.5) * angle);

@@ -17,14 +17,14 @@ export const Track: React.FC<ITrack> = ({ track, selected, onSelect }) => {
       className={trackButton()}
       data-selected={selected}
       aria-current={selected ? "true" : undefined}
-      aria-label={`Открыть ${track.name}, текущий уровень ${track.progress}`}
+      aria-label={`Open ${track.name}, current level ${track.progress}`}
       onClick={() => onSelect(track.id)}
     >
       <span className={trackCode()}>{track.code}</span>
       <span className={trackName()}>{track.name}</span>
       <span
         className={trackProgress()}
-        aria-label={`${track.progress} из ${track.levelCount} уровней`}
+        aria-label={`${track.progress} of ${track.levelCount} levels`}
       >
         <span aria-hidden="true">
           {track.progress}

@@ -42,6 +42,7 @@ func decodeDocument(data []byte) (career.Document, error) {
 	if err := decoder.Decode(new(any)); err != io.EOF {
 		return document, fmt.Errorf("после документа обнаружены лишние данные")
 	}
+	document.Migrate()
 	if err := document.Validate(); err != nil {
 		return document, err
 	}

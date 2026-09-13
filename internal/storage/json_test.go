@@ -47,3 +47,48 @@ func TestJSONNormalizesOptionalCollections(t *testing.T) {
 		t.Fatal("JSON collections must not be null")
 	}
 }
+
+func TestDecodeMigratesVersionOneDocument(t *testing.T) {
+	data := []byte(`{
+  "version": 1,
+  "profile": {"name": "Legacy profile", "role": "Software Engineer"},
+  "schema": {
+    "name": "Legacy matrix",
+    "groups": [{
+      "id": "technology",
+      "name": "Technology",
+      "color": "aqua",
+      "tracks": [
+        {
+          "id": "frontend",
+          "name": "Frontend",
+          "description": "Default track",
+          "levels": [{"name": "Level 1", "description": "", "examples": []}]
+        },
+        {
+          "id": "custom",
+          "name": "Custom",
+          "description": "Custom track",
+          "levels": [{"name": "Level 1", "description": "", "examples": []}]
+        }
+      ]
+    }]
+  },
+  "progress": {"frontend": 1}
+}`)
+
+	document, err := decodeDocument(data)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if document.Version != career.Version {
+		t.Fatalf("version: got %d, want %d", document.Version, career.Version)
+	}
+	tracks := document.Schema.Groups[0].Tracks
+	if tracks[0].Code != "FE" || tracks[1].Code != "AA" {
+		t.Fatalf("migrated codes: got %q and %q", tracks[0].Code, tracks[1].Code)
+	}
+	if document.Profile.Name != "Legacy profile" || document.Progress["frontend"] != 1 {
+		t.Fatal("migration must preserve profile and progress")
+	}
+}

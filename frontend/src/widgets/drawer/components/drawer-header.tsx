@@ -29,7 +29,7 @@ export const DrawerHeader: React.FC<IDrawerHeader> = ({
 }) => {
   return (
     <>
-      <Dialog.Close className={closeButton()} aria-label="Закрыть">
+      <Dialog.Close className={closeButton()} aria-label="Close">
         <X className={icon()} />
       </Dialog.Close>
 

@@ -3,7 +3,9 @@ import { useState } from "react";
 import { Dialog } from "@base-ui/react/dialog";
 
 import type { Group, Track } from "@/entities/document";
+import { TRACK_COLOR_CLASSES } from "@/shared/config/track-colors";
 
+import { FALLBACK_GROUP, FALLBACK_TRACK } from "../constants/fallbacks";
 import { DrawerDescription } from "./drawer-description";
 import { DrawerError } from "./drawer-error";
 import { DrawerFooter } from "./drawer-footer";
@@ -11,34 +13,6 @@ import { DrawerHeader } from "./drawer-header";
 import { DrawerLevels } from "./drawer-levels";
 import { DrawerTrack } from "./drawer-track";
 import { backdrop, popup } from "./drawer.classes";
-
-//
-//
-
-const TRACK_COLOR_CLASSES: Record<string, string> = {
-  red: "[--track-color:var(--color-track-red)]",
-  green: "[--track-color:var(--color-track-green)]",
-  yellow: "[--track-color:var(--color-track-yellow)]",
-  blue: "[--track-color:var(--color-track-blue)]",
-  purple: "[--track-color:var(--color-track-purple)]",
-  aqua: "[--track-color:var(--color-track-aqua)]",
-  orange: "[--track-color:var(--color-track-orange)]",
-};
-
-const FALLBACK_TRACK: Track = {
-  id: "",
-  code: "",
-  name: "Трек не выбран",
-  description: "Выберите трек на карте или в списке.",
-  levels: [{ name: "Уровень не выбран", description: "", examples: [] }],
-};
-
-const FALLBACK_GROUP: Group = {
-  id: "",
-  name: "Карта развития",
-  color: "aqua",
-  tracks: [FALLBACK_TRACK],
-};
 
 //
 //

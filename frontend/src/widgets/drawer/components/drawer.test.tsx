@@ -44,8 +44,8 @@ describe("<Drawer />", () => {
       />,
     );
 
-    expect(screen.getByRole("dialog", { name: "Трек не выбран" })).toBeVisible();
-    expect(screen.getByRole("button", { name: "Уровень 1: Уровень не выбран" })).toHaveAttribute(
+    expect(screen.getByRole("dialog", { name: "No track selected" })).toBeVisible();
+    expect(screen.getByRole("button", { name: "Level 1: No level selected" })).toHaveAttribute(
       "aria-pressed",
       "true",
     );
@@ -65,7 +65,7 @@ describe("<Drawer />", () => {
       />,
     );
 
-    expect(screen.getByRole("button", { name: "Уровень 2: Practice" })).toHaveAttribute(
+    expect(screen.getByRole("button", { name: "Level 2: Practice" })).toHaveAttribute(
       "aria-pressed",
       "true",
     );
@@ -88,10 +88,10 @@ describe("<Drawer />", () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Уровень 1: Introduction" }));
+    fireEvent.click(screen.getByRole("button", { name: "Level 1: Introduction" }));
     expect(onSelectLevel).toHaveBeenCalledWith(1);
 
-    fireEvent.click(screen.getByRole("button", { name: "Установить уровень 3" }));
+    fireEvent.click(screen.getByRole("button", { name: "Set level 3" }));
 
     await waitFor(() => expect(onSetProgress).toHaveBeenCalledWith(3));
     expect(onSelectLevel).toHaveBeenLastCalledWith(3);

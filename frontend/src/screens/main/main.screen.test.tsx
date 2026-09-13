@@ -34,9 +34,9 @@ describe("<MainScreen />", () => {
   it("opens the selected chart level and highlights its track", () => {
     render(<MainScreen />);
 
-    const navigation = screen.getByRole("navigation", { name: "Треки развития" });
-    const backendButton = within(navigation).getByRole("button", { name: /Открыть Backend/ });
-    const frontendButton = within(navigation).getByRole("button", { name: /Открыть Frontend/ });
+    const navigation = screen.getByRole("navigation", { name: "Development tracks" });
+    const backendButton = within(navigation).getByRole("button", { name: /Open Backend/ });
+    const frontendButton = within(navigation).getByRole("button", { name: /Open Frontend/ });
     const closedDrawer = document.querySelector<HTMLElement>("[role='dialog']");
 
     expect(closedDrawer).toHaveAttribute("data-closed");
@@ -48,15 +48,15 @@ describe("<MainScreen />", () => {
     expect(backendButton).toHaveAttribute("aria-current", "true");
     expect(frontendButton).not.toHaveAttribute("aria-current");
     expect(screen.getByRole("dialog", { name: "Backend" })).toHaveAttribute("data-open");
-    expect(screen.getByRole("button", { name: "Уровень 1: Introduction" })).toHaveAttribute(
+    expect(screen.getByRole("button", { name: "Level 1: Introduction" })).toHaveAttribute(
       "aria-pressed",
       "true",
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Уровень 4: Team Growth" }));
+    fireEvent.click(screen.getByRole("button", { name: "Level 4: Team Growth" }));
 
     expect(documentService.selectedLevel).toBe(4);
-    expect(screen.getByRole("button", { name: "Уровень 4: Team Growth" })).toHaveAttribute(
+    expect(screen.getByRole("button", { name: "Level 4: Team Growth" })).toHaveAttribute(
       "aria-pressed",
       "true",
     );
@@ -65,19 +65,19 @@ describe("<MainScreen />", () => {
   it("opens the next level from the track list and saves progress", async () => {
     render(<MainScreen />);
 
-    fireEvent.click(screen.getByRole("button", { name: /Открыть Backend/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Open Backend/ }));
 
     expect(documentService.selectedLevel).toBeNull();
-    expect(screen.getByRole("button", { name: "Уровень 3: Independence" })).toHaveAttribute(
+    expect(screen.getByRole("button", { name: "Level 3: Independence" })).toHaveAttribute(
       "aria-pressed",
       "true",
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Установить уровень 3" }));
+    fireEvent.click(screen.getByRole("button", { name: "Set level 3" }));
 
     await waitFor(() => expect(bridgeMocks.save).toHaveBeenCalledOnce());
     expect(documentService.document.progress.backend).toBe(3);
     expect(documentService.selectedLevel).toBe(3);
-    expect(screen.getByRole("button", { name: "Текущий уровень" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Current level" })).toBeDisabled();
   });
 });

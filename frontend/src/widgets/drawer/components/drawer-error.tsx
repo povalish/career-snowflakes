@@ -10,7 +10,7 @@ interface IDrawerError {
 export const DrawerError: React.FC<IDrawerError> = ({ error }) => {
   return (
     <div role="alert" className={errorMessage()}>
-      <strong>Не удалось сохранить уровень.</strong> {error}
+      <strong>Failed to save the level.</strong> {error}
     </div>
   );
 };

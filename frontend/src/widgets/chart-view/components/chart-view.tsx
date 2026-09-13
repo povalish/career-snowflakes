@@ -24,9 +24,9 @@ export const ChartView: React.FC<IChartView> = ({ tracks, onLevelSelect }) => {
       viewBox="0 0 600 600"
       aria-labelledby="career-chart-title career-chart-description"
     >
-      <title id="career-chart-title">Карта профессионального развития</title>
+      <title id="career-chart-title">Professional development map</title>
       <desc id="career-chart-description">
-        Заполненные цветом секторы показывают достигнутые уровни по карьерным направлениям.
+        Filled sectors show completed levels across career tracks.
       </desc>
 
       <circle cx={CHART_CENTER} cy={CHART_CENTER} r="243" className={guideRing()} />

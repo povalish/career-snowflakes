@@ -34,7 +34,11 @@ func main() {
 		MinWidth:         760,
 		MinHeight:        620,
 		BackgroundColour: application.NewRGB(40, 40, 40),
-		URL:              "/",
+		Mac: application.MacWindow{
+			TitleBar:                application.MacTitleBarHiddenInsetUnified,
+			InvisibleTitleBarHeight: 48,
+		},
+		URL: "/",
 	})
 	service.dialogs = nativeDialogs{app: app, window: window}
 	if err := app.Run(); err != nil {

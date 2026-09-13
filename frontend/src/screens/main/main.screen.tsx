@@ -1,29 +1,28 @@
 import { createDocumentMock } from "@/entities/document";
 import { ChartView, mapDocumentToChartTracks } from "@/widgets/chart-view";
 
+//
+//
+
 const documentMock = createDocumentMock();
 const chartTracks = mapDocumentToChartTracks(documentMock);
 
+//
+//
+
 export const MainScreen: React.FC = () => {
   return (
-    <main className="min-h-screen bg-background px-4 py-6 text-foreground sm:px-6 lg:px-10">
-      <section
-        className="mx-auto max-w-190 overflow-hidden rounded-xl border border-border bg-card"
-        aria-labelledby="schema-title"
-      >
-        <header className="px-5 pt-5 sm:px-6 sm:pt-6">
-          <p className="mb-1 text-[9px] font-semibold tracking-[1.6px] text-muted-foreground">
-            ОБЗОР
-          </p>
-          <h1 id="schema-title" className="text-lg font-medium tracking-[-0.3px]">
-            {documentMock.schema.name}
-          </h1>
-        </header>
+    <main className="relative isolate grid min-h-screen place-items-center overflow-hidden bg-background px-4 py-8 text-foreground sm:px-8 sm:py-10">
+      <div
+        className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_center,var(--color-card)_0%,transparent_68%)]"
+        aria-hidden="true"
+      />
 
-        <div className="mx-auto w-full max-w-165 px-2 pb-4 sm:px-5 sm:pb-6">
+      <div className="mx-auto flex w-full max-w-7xl items-center justify-center">
+        <div className="w-full max-w-[min(92vw,72vh,46rem)]">
           <ChartView tracks={chartTracks} />
         </div>
-      </section>
+      </div>
     </main>
   );
 };

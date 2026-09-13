@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 
 	"career-snowflakes/internal/storage"
+
 	"github.com/wailsapp/wails/v3/pkg/application"
 )
 
@@ -27,7 +28,7 @@ func main() {
 		Mac:         application.MacOptions{ApplicationShouldTerminateAfterLastWindowClosed: true},
 	})
 	window := app.Window.NewWithOptions(application.WebviewWindowOptions{
-		Title:            "Career Snowflakes",
+		Title:            "Software Engineer Track",
 		Width:            1380,
 		Height:           920,
 		MinWidth:         760,

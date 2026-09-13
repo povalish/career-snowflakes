@@ -7,7 +7,10 @@ import { defineConfig } from "vite";
 // https://vitejs.dev/config/
 export default defineConfig({
   resolve: {
-    alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) },
+    alias: {
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
+      "@bindings": fileURLToPath(new URL("./bindings", import.meta.url)),
+    },
   },
   server: {
     host: "127.0.0.1",

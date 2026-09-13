@@ -1,6 +1,8 @@
 import type { Document } from "@/entities/document";
+import type { ChartViewTrack } from "@/widgets/chart-view";
 
-import type { ChartViewTrack } from "../types/chart-view.types";
+//
+//
 
 export function mapDocumentToChartTracks(document: Document): ChartViewTrack[] {
   return document.schema.groups.flatMap((group) =>

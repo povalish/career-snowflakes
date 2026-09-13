@@ -1,11 +1,16 @@
 import { createDocumentMock } from "@/entities/document";
-import { ChartView, mapDocumentToChartTracks } from "@/widgets/chart-view";
+import { ChartView } from "@/widgets/chart-view";
+import { ListView } from "@/widgets/list-view";
+
+import { mapDocumentToChartTracks } from "./utils/mapDocumentToChartTracks";
+import { mapDocumentToListViewGroups } from "./utils/mapDocumentToListViewGroups";
 
 //
 //
 
 const documentMock = createDocumentMock();
 const chartTracks = mapDocumentToChartTracks(documentMock);
+const listGroups = mapDocumentToListViewGroups(documentMock);
 
 //
 //
@@ -18,10 +23,11 @@ export const MainScreen: React.FC = () => {
         aria-hidden="true"
       />
 
-      <div className="mx-auto flex w-full max-w-7xl items-center justify-center">
+      <div className="mx-auto grid w-full max-w-7xl grid-cols-[minmax(0,46rem)_minmax(13rem,15rem)] items-center justify-center gap-[clamp(2rem,5vw,4.5rem)] [@media(max-width:700px)]:grid-cols-1">
         <div className="w-full max-w-[min(92vw,72vh,46rem)]">
           <ChartView tracks={chartTracks} />
         </div>
+        <ListView groups={listGroups} />
       </div>
     </main>
   );

@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { GROUP_COLORS } from "@/shared/config/track-colors";
+
 import { trackSchema } from "./track";
 
 //
@@ -20,7 +22,7 @@ export const groupSchema = z.object({
       (value) => unicodeLength(value) <= MAX_NAME_LENGTH,
       `Group name must contain no more than ${MAX_NAME_LENGTH} characters`,
     ),
-  color: z.enum(["red", "green", "yellow", "blue", "purple", "aqua", "orange"], {
+  color: z.enum(GROUP_COLORS, {
     error: "Choose a supported group color",
   }),
   tracks: z

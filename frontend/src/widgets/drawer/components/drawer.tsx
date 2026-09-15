@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Dialog } from "@base-ui/react/dialog";
 
 import type { Group, Track } from "@/entities/document";
-import { TRACK_COLOR_CLASSES } from "@/shared/config/track-colors";
+import { GROUP_COLOR_CLASSES } from "@/shared/config/track-colors";
 
 import { FALLBACK_GROUP, FALLBACK_TRACK } from "../constants/fallbacks";
 import { DrawerDescription } from "./drawer-description";
@@ -44,7 +44,7 @@ export const Drawer: React.FC<IDrawer> = ({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const stage = track.levels[level - 1];
-  const colorClass = TRACK_COLOR_CLASSES[group.color] ?? TRACK_COLOR_CLASSES.aqua;
+  const colorClass = GROUP_COLOR_CLASSES[group.color] ?? GROUP_COLOR_CLASSES.aqua;
 
   if (!stage) return null;
 

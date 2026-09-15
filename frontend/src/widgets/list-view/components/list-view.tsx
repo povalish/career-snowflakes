@@ -1,4 +1,4 @@
-import { TRACK_COLOR_CLASSES } from "@/shared/config/track-colors";
+import { GROUP_COLOR_CLASSES } from "@/shared/config/track-colors";
 
 import type { ListViewGroup } from "../types/list-view.types";
 import { groupMarker, groupTitle, list, trackList } from "./list-view.classes";
@@ -19,7 +19,7 @@ export const ListView: React.FC<IListView> = ({ groups, selectedTrackId, onTrack
   return (
     <nav className={list()} aria-label="Development tracks">
       {groups.map((group) => {
-        const colorClass = TRACK_COLOR_CLASSES[group.color] ?? TRACK_COLOR_CLASSES.aqua;
+        const colorClass = GROUP_COLOR_CLASSES[group.color] ?? GROUP_COLOR_CLASSES.aqua;
 
         return (
           <section key={group.id} className={colorClass}>

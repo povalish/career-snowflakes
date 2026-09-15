@@ -1,9 +1,11 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
+
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/shared/ui/button";
 
 import { documentSchema, type DocumentFF } from "../../schemas/document";
+import { GroupForm } from "../group-form/group.form";
 import { errorMessage, field, form, header, input, submitError } from "./document.classes";
 
 //
@@ -89,6 +91,8 @@ export const DocumentForm: React.FC<IDocumentForm> = ({ defaultValues, onSubmit 
             </p>
           )}
         </div>
+
+        <GroupForm />
       </form>
     </FormProvider>
   );

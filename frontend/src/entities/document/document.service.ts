@@ -59,8 +59,8 @@ export class DocumentService {
     return document;
   }
 
-  public async save(): Promise<Document> {
-    const document = await DocumentBridgeService.save(this.document);
+  public async save(candidate: Document): Promise<Document> {
+    const document = await DocumentBridgeService.save(candidate);
 
     this.setDocument(document);
     return document;

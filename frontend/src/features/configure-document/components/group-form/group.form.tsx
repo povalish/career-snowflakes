@@ -7,6 +7,8 @@ import { GROUP_COLOR_CLASSES, GROUP_COLORS } from "@/shared/config/track-colors"
 import { Button } from "@/shared/ui/button";
 
 import type { DocumentFF } from "../../schemas/document";
+import { MAX_TRACKS } from "../track-form/track.constants";
+import { TrackForm } from "../track-form/track.form";
 import {
   colorDot,
   control as controlClass,
@@ -20,7 +22,7 @@ import {
   label,
   section,
 } from "./group.classes";
-import { MAX_GROUPS, MAX_TRACKS, COLOR_NAMES } from "./group.constants";
+import { COLOR_NAMES, MAX_GROUPS } from "./group.constants";
 import { createGroup } from "./group.utils";
 
 //
@@ -112,59 +114,63 @@ export const GroupForm: React.FC = () => {
         })}
       </div>
 
-      <div key={selectedField.fieldKey} className={fieldsClass()}>
-        <div className={field()}>
-          <label htmlFor={`${fieldId}-name`} className={label()}>
-            Group name
-          </label>
-          <input
-            {...register(`groups.${selectedIndex}.name`)}
-            id={`${fieldId}-name`}
-            type="text"
-            className={controlClass()}
-            aria-invalid={Boolean(nameError)}
-            aria-describedby={nameError ? `${fieldId}-name-error` : undefined}
-          />
-          {nameError && (
-            <p id={`${fieldId}-name-error`} role="alert" className={errorMessage()}>
-              {nameError.message}
-            </p>
-          )}
-        </div>
+      <div key={selectedField.fieldKey}>
+        <div className={fieldsClass()}>
+          <div className={field()}>
+            <label htmlFor={`${fieldId}-name`} className={label()}>
+              Group name
+            </label>
+            <input
+              {...register(`groups.${selectedIndex}.name`)}
+              id={`${fieldId}-name`}
+              type="text"
+              className={controlClass()}
+              aria-invalid={Boolean(nameError)}
+              aria-describedby={nameError ? `${fieldId}-name-error` : undefined}
+            />
+            {nameError && (
+              <p id={`${fieldId}-name-error`} role="alert" className={errorMessage()}>
+                {nameError.message}
+              </p>
+            )}
+          </div>
 
-        <div className={field()}>
-          <label htmlFor={`${fieldId}-color`} className={label()}>
-            Group color
-          </label>
-          <select
-            {...register(`groups.${selectedIndex}.color`)}
-            id={`${fieldId}-color`}
-            className={controlClass()}
-            aria-invalid={Boolean(colorError)}
-            aria-describedby={colorError ? `${fieldId}-color-error` : undefined}
+          <div className={field()}>
+            <label htmlFor={`${fieldId}-color`} className={label()}>
+              Group color
+            </label>
+            <select
+              {...register(`groups.${selectedIndex}.color`)}
+              id={`${fieldId}-color`}
+              className={controlClass()}
+              aria-invalid={Boolean(colorError)}
+              aria-describedby={colorError ? `${fieldId}-color-error` : undefined}
+            >
+              {GROUP_COLORS.map((color) => (
+                <option key={color} value={color}>
+                  {COLOR_NAMES[color]}
+                </option>
+              ))}
+            </select>
+            {colorError && (
+              <p id={`${fieldId}-color-error`} role="alert" className={errorMessage()}>
+                {colorError.message}
+              </p>
+            )}
+          </div>
+
+          <Button
+            type="button"
+            variant="destructive"
+            onClick={removeGroup}
+            disabled={!canRemoveGroup || isSubmitting}
           >
-            {GROUP_COLORS.map((color) => (
-              <option key={color} value={color}>
-                {COLOR_NAMES[color]}
-              </option>
-            ))}
-          </select>
-          {colorError && (
-            <p id={`${fieldId}-color-error`} role="alert" className={errorMessage()}>
-              {colorError.message}
-            </p>
-          )}
+            <Trash2 aria-hidden="true" />
+            Remove group
+          </Button>
         </div>
 
-        <Button
-          type="button"
-          variant="destructive"
-          onClick={removeGroup}
-          disabled={!canRemoveGroup || isSubmitting}
-        >
-          <Trash2 aria-hidden="true" />
-          Remove group
-        </Button>
+        <TrackForm groupIndex={selectedIndex} />
       </div>
     </section>
   );

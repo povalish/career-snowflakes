@@ -19,8 +19,8 @@ vi.mock("@/entities/document/document-bridge.service", () => ({
 }));
 
 vi.mock("react-router", () => ({
-  Link: () => null
-}))
+  Link: () => null,
+}));
 
 //
 //

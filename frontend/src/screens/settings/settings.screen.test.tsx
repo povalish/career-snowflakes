@@ -50,9 +50,7 @@ describe("<SettingsScreen />", () => {
     fireEvent.click(screen.getByRole("button", { name: "Apply changes" }));
 
     await waitFor(() => expect(bridgeMocks.save).toHaveBeenCalledOnce());
-    expect(bridgeMocks.save).toHaveBeenCalledWith(
-      expect.objectContaining({ schema: expect.objectContaining({ name: "Updated schema" }) }),
-    );
+    expect(bridgeMocks.save.mock.calls[0]?.[0].schema.name).toBe("Updated schema");
     expect(documentService.document.schema.name).toBe("Updated schema");
   });
 });

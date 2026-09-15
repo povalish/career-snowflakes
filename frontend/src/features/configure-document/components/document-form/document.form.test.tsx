@@ -38,17 +38,28 @@ const defaultValues: DocumentFF = {
   ],
 };
 
+const createLevel = (
+  index: number,
+  reached = false,
+): DocumentFF["groups"][number]["tracks"][number]["levels"][number] => ({
+  name: `Stage ${index + 1}`,
+  description: `Stage ${index + 1} description.`,
+  examplesText: `Stage ${index + 1} example`,
+  reached,
+});
+
+const createTrack = (index: number): DocumentFF["groups"][number]["tracks"][number] => ({
+  ...defaultValues.groups[0]!.tracks[0]!,
+  id: `track-${index}`,
+  code: `${String.fromCharCode(65 + Math.floor(index / 26))}${String.fromCharCode(65 + (index % 26))}`,
+  name: `Track ${index}`,
+});
+
 const createGroup = (index: number): DocumentFF["groups"][number] => ({
   id: `group-${index}`,
   name: `Group ${index}`,
   color: GROUP_COLORS[index % GROUP_COLORS.length] ?? "aqua",
-  tracks: [
-    {
-      ...defaultValues.groups[0]!.tracks[0]!,
-      id: `track-${index}`,
-      code: `A${String.fromCharCode(65 + index)}`,
-    },
-  ],
+  tracks: [createTrack(index)],
 });
 
 //
@@ -78,6 +89,16 @@ describe("<DocumentForm />", () => {
       "true",
     );
     expect(screen.getByRole("button", { name: "Remove group" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "FE Frontend" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(screen.getByRole("button", { name: "Remove track" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Level 1: Introduction" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(screen.getByRole("button", { name: "Remove level" })).toBeDisabled();
 
     fireEvent.change(nameInput, { target: { value: "Updated Career Matrix" } });
 
@@ -155,11 +176,7 @@ describe("<DocumentForm />", () => {
     });
   });
 
-  it("confirms group removal and selects the previous group", () => {
-    const confirm = vi
-      .spyOn(window, "confirm")
-      .mockReturnValueOnce(false)
-      .mockReturnValueOnce(true);
+  it("removes a group and selects the previous group", () => {
     const values = { ...defaultValues, groups: [createGroup(0), createGroup(1)] };
 
     render(
@@ -172,16 +189,9 @@ describe("<DocumentForm />", () => {
     fireEvent.click(screen.getByRole("button", { name: "Group 1" }));
     fireEvent.click(screen.getByRole("button", { name: "Remove group" }));
 
-    expect(screen.getByRole("button", { name: "Group 1" })).toBeVisible();
-
-    fireEvent.click(screen.getByRole("button", { name: "Remove group" }));
-
     expect(screen.queryByRole("button", { name: "Group 1" })).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Group 0" })).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByRole("button", { name: "Remove group" })).toBeDisabled();
-    expect(confirm).toHaveBeenCalledTimes(2);
-
-    confirm.mockRestore();
   });
 
   it("does not allow more than eight groups", () => {
@@ -198,5 +208,256 @@ describe("<DocumentForm />", () => {
     );
 
     expect(screen.getByRole("button", { name: "Add group" })).toBeDisabled();
+  });
+
+  it("retains track edits when switching tracks", async () => {
+    const onSubmit = vi.fn<(values: DocumentFF) => Promise<void>>().mockResolvedValue(undefined);
+    const values: DocumentFF = {
+      ...defaultValues,
+      groups: [{ ...defaultValues.groups[0]!, tracks: [createTrack(0), createTrack(1)] }],
+    };
+
+    render(<DocumentForm defaultValues={values} onSubmit={onSubmit} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "AB Track 1" }));
+    fireEvent.change(screen.getByRole("textbox", { name: "Track code" }), {
+      target: { value: "BE" },
+    });
+    fireEvent.change(screen.getByRole("textbox", { name: "Track name" }), {
+      target: { value: "Backend" },
+    });
+    fireEvent.change(screen.getByRole("textbox", { name: "Track description" }), {
+      target: { value: "Building backend services." },
+    });
+    fireEvent.change(screen.getByRole("textbox", { name: "Track resources" }), {
+      target: { value: "[Go](https://go.dev)" },
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "AA Track 0" }));
+    expect(screen.getByRole("textbox", { name: "Track name" })).toHaveValue("Track 0");
+
+    fireEvent.click(screen.getByRole("button", { name: "BE Backend" }));
+    expect(screen.getByRole("textbox", { name: "Track description" })).toHaveValue(
+      "Building backend services.",
+    );
+    expect(screen.getByRole("textbox", { name: "Track resources" })).toHaveValue(
+      "[Go](https://go.dev)",
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Apply changes" }));
+
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledOnce());
+    expect(onSubmit.mock.calls[0]?.[0].groups[0]?.tracks[1]).toEqual({
+      ...createTrack(1),
+      code: "BE",
+      name: "Backend",
+      description: "Building backend services.",
+      resources: "[Go](https://go.dev)",
+    });
+  });
+
+  it("adds and selects a track with five initial levels", async () => {
+    const onSubmit = vi.fn<(values: DocumentFF) => Promise<void>>().mockResolvedValue(undefined);
+
+    render(<DocumentForm defaultValues={defaultValues} onSubmit={onSubmit} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Add track" }));
+
+    expect(screen.getByRole("button", { name: "AA New track" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(screen.getByRole("textbox", { name: "Track code" })).toHaveValue("AA");
+    expect(screen.getByRole("textbox", { name: "Track name" })).toHaveValue("New track");
+
+    fireEvent.click(screen.getByRole("button", { name: "Apply changes" }));
+
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledOnce());
+    expect(onSubmit.mock.calls[0]?.[0].groups[0]?.tracks[1]?.levels).toHaveLength(5);
+  });
+
+  it("removes a track and selects the previous track", () => {
+    const values: DocumentFF = {
+      ...defaultValues,
+      groups: [{ ...defaultValues.groups[0]!, tracks: [createTrack(0), createTrack(1)] }],
+    };
+
+    render(
+      <DocumentForm
+        defaultValues={values}
+        onSubmit={vi.fn<(values: DocumentFF) => Promise<void>>()}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "AB Track 1" }));
+    fireEvent.click(screen.getByRole("button", { name: "Remove track" }));
+
+    expect(screen.queryByRole("button", { name: "AB Track 1" })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "AA Track 0" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(screen.getByRole("button", { name: "Remove track" })).toBeDisabled();
+  });
+
+  it("does not allow more than 32 tracks in total", () => {
+    const values: DocumentFF = {
+      ...defaultValues,
+      groups: [
+        {
+          ...defaultValues.groups[0]!,
+          tracks: Array.from({ length: 32 }, (_, index) => createTrack(index)),
+        },
+      ],
+    };
+
+    render(
+      <DocumentForm
+        defaultValues={values}
+        onSubmit={vi.fn<(values: DocumentFF) => Promise<void>>()}
+      />,
+    );
+
+    expect(screen.getByRole("button", { name: "Add track" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Add group" })).toBeDisabled();
+  });
+
+  it("retains level edits when switching levels", async () => {
+    const onSubmit = vi.fn<(values: DocumentFF) => Promise<void>>().mockResolvedValue(undefined);
+    const values: DocumentFF = {
+      ...defaultValues,
+      groups: [
+        {
+          ...defaultValues.groups[0]!,
+          tracks: [
+            {
+              ...defaultValues.groups[0]!.tracks[0]!,
+              levels: [createLevel(0), createLevel(1)],
+            },
+          ],
+        },
+      ],
+    };
+
+    render(<DocumentForm defaultValues={values} onSubmit={onSubmit} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Level 2: Stage 2" }));
+    fireEvent.change(screen.getByRole("textbox", { name: "Level name" }), {
+      target: { value: "Advanced" },
+    });
+    fireEvent.change(screen.getByRole("textbox", { name: "Level description" }), {
+      target: { value: "Lead complex projects." },
+    });
+    fireEvent.change(screen.getByRole("textbox", { name: "Level examples (one per line)" }), {
+      target: { value: "Design a system\nMentor teammates" },
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "Level 1: Stage 1" }));
+    expect(screen.getByRole("textbox", { name: "Level name" })).toHaveValue("Stage 1");
+
+    fireEvent.click(screen.getByRole("button", { name: "Level 2: Advanced" }));
+    expect(screen.getByRole("textbox", { name: "Level description" })).toHaveValue(
+      "Lead complex projects.",
+    );
+    expect(screen.getByRole("textbox", { name: "Level examples (one per line)" })).toHaveValue(
+      "Design a system\nMentor teammates",
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Apply changes" }));
+
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledOnce());
+    expect(onSubmit.mock.calls[0]?.[0].groups[0]?.tracks[0]?.levels[1]).toEqual({
+      ...createLevel(1),
+      name: "Advanced",
+      description: "Lead complex projects.",
+      examplesText: "Design a system\nMentor teammates",
+    });
+  });
+
+  it("adds and selects an unreached level", async () => {
+    const onSubmit = vi.fn<(values: DocumentFF) => Promise<void>>().mockResolvedValue(undefined);
+
+    render(<DocumentForm defaultValues={defaultValues} onSubmit={onSubmit} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Add level" }));
+
+    expect(screen.getByRole("button", { name: "Level 2: Level 2" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(screen.getByRole("textbox", { name: "Level name" })).toHaveValue("Level 2");
+
+    fireEvent.click(screen.getByRole("button", { name: "Apply changes" }));
+
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledOnce());
+    expect(onSubmit.mock.calls[0]?.[0].groups[0]?.tracks[0]?.levels[1]).toEqual({
+      name: "Level 2",
+      description: "",
+      examplesText: "",
+      reached: false,
+    });
+  });
+
+  it("removes a level while preserving reached flags", async () => {
+    const onSubmit = vi.fn<(values: DocumentFF) => Promise<void>>().mockResolvedValue(undefined);
+    const values: DocumentFF = {
+      ...defaultValues,
+      groups: [
+        {
+          ...defaultValues.groups[0]!,
+          tracks: [
+            {
+              ...defaultValues.groups[0]!.tracks[0]!,
+              levels: [createLevel(0, true), createLevel(1, true), createLevel(2)],
+            },
+          ],
+        },
+      ],
+    };
+
+    render(<DocumentForm defaultValues={values} onSubmit={onSubmit} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Level 2: Stage 2" }));
+    fireEvent.click(screen.getByRole("button", { name: "Remove level" }));
+
+    expect(screen.queryByRole("button", { name: "Level 2: Stage 2" })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Level 1: Stage 1" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Apply changes" }));
+
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledOnce());
+    expect(onSubmit.mock.calls[0]?.[0].groups[0]?.tracks[0]?.levels).toEqual([
+      createLevel(0, true),
+      createLevel(2),
+    ]);
+  });
+
+  it("does not allow more than eight levels", () => {
+    const values: DocumentFF = {
+      ...defaultValues,
+      groups: [
+        {
+          ...defaultValues.groups[0]!,
+          tracks: [
+            {
+              ...defaultValues.groups[0]!.tracks[0]!,
+              levels: Array.from({ length: 8 }, (_, index) => createLevel(index)),
+            },
+          ],
+        },
+      ],
+    };
+
+    render(
+      <DocumentForm
+        defaultValues={values}
+        onSubmit={vi.fn<(values: DocumentFF) => Promise<void>>()}
+      />,
+    );
+
+    expect(screen.getByRole("button", { name: "Add level" })).toBeDisabled();
   });
 });

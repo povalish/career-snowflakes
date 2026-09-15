@@ -48,6 +48,25 @@ func TestJSONNormalizesOptionalCollections(t *testing.T) {
 	}
 }
 
+func TestDecodeAllowsVersionTwoWithoutResources(t *testing.T) {
+	data, err := encodeDocument(career.Default())
+	if err != nil {
+		t.Fatal(err)
+	}
+	dataWithoutResources := bytes.ReplaceAll(data, []byte(`"resources": "",`+"\n"), nil)
+	if bytes.Equal(data, dataWithoutResources) {
+		t.Fatal("encoded document did not contain resources")
+	}
+
+	document, err := decodeDocument(dataWithoutResources)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if document.Schema.Groups[0].Tracks[0].Resources != "" {
+		t.Fatal("missing resources must use an empty string")
+	}
+}
+
 func TestDecodeMigratesVersionOneDocument(t *testing.T) {
 	data := []byte(`{
   "version": 1,

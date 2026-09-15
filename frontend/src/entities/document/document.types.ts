@@ -27,6 +27,7 @@ export interface Track {
   code: string;
   name: string;
   description: string;
+  resources: string;
   levels: Level[];
 }
 

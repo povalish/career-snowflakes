@@ -41,6 +41,7 @@ func TestExportImportRoundTrip(t *testing.T) {
 	store := New(filepath.Join(directory, "source.json"))
 	document := career.Default()
 	document.Schema.Name = "Моя схема"
+	document.Schema.Groups[0].Tracks[0].Resources = "- [Go documentation](https://go.dev/doc/)"
 	document.Progress["backend"] = 5
 	if _, err := store.Save(document); err != nil {
 		t.Fatal(err)

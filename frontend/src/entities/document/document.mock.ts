@@ -43,6 +43,7 @@ function createTrack(
     code,
     name,
     description,
+    resources: "",
     levels: LEVELS.map((level, levelIndex) => ({
       ...level,
       examples: [examples[levelIndex]!],

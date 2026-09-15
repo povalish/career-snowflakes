@@ -25,6 +25,7 @@ describe("mapDocumentToListViewGroups", () => {
                 code: "FE",
                 name: "Frontend",
                 description: "Building user interfaces.",
+                resources: "",
                 levels: [
                   { name: "Introduction", description: "Learn the basics.", examples: [] },
                   { name: "Practice", description: "Apply the skill.", examples: [] },

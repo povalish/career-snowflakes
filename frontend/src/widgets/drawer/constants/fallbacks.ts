@@ -8,6 +8,7 @@ export const FALLBACK_TRACK: Track = {
   code: "",
   name: "No track selected",
   description: "Select a track on the map or from the list.",
+  resources: "",
   levels: [{ name: "No level selected", description: "", examples: [] }],
 };
 

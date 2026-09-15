@@ -14,6 +14,7 @@ const track: Track = {
   code: "BE",
   name: "Backend",
   description: "Backend track",
+  resources: "",
   levels: [
     { name: "Introduction", description: "First level", examples: [] },
     { name: "Practice", description: "Second level", examples: [] },

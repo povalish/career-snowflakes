@@ -1,22 +1,12 @@
 import { FormProvider, useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, Circle, LoaderCircle, RotateCcw, Save } from "lucide-react";
-
-import { Button } from "@/shared/ui/button";
 
 import { documentSchema, type DocumentFF } from "../../schemas/document";
 import { GroupForm } from "../group-form/group.form";
-import {
-  actions,
-  body,
-  form,
-  header,
-  screenTitle,
-  status,
-  statusIcon,
-  submitError,
-} from "./document.classes";
+import { DocumentFeedback } from "./document-feedback";
+import { DocumentToolbar } from "./document-toolbar";
+import { form, body } from "./document.classes";
 
 //
 //
@@ -36,8 +26,7 @@ export const DocumentForm: React.FC<IDocumentForm> = ({ defaultValues, onSubmit 
     resolver: zodResolver(documentSchema),
   });
 
-  const submissionError = methods.formState.errors.root?.message;
-  const { isDirty, isSubmitting, isSubmitSuccessful } = methods.formState;
+  const { isSubmitting } = methods.formState;
 
   // Methods
   //
@@ -67,57 +56,8 @@ export const DocumentForm: React.FC<IDocumentForm> = ({ defaultValues, onSubmit 
         noValidate
         onSubmit={(event) => void submit(event)}
       >
-        <header className={header()}>
-          <h1 className={screenTitle()}>Document settings</h1>
-          <div className={actions()}>
-            <div className={status()} data-dirty={isDirty}>
-              {isSubmitting ? (
-                <LoaderCircle className={statusIcon({ busy: true })} aria-hidden="true" />
-              ) : isDirty ? (
-                <Circle className={statusIcon()} aria-hidden="true" />
-              ) : (
-                <Check className={statusIcon()} aria-hidden="true" />
-              )}
-              <output>
-                {isSubmitting
-                  ? "Applying…"
-                  : isDirty
-                    ? "Unsaved changes"
-                    : isSubmitSuccessful
-                      ? "Changes saved"
-                      : "All changes saved"}
-              </output>
-            </div>
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              aria-label="Reset changes"
-              title="Reset changes"
-              disabled={!isDirty || isSubmitting}
-              onClick={() => methods.reset()}
-            >
-              <RotateCcw aria-hidden="true" />
-            </Button>
-            <Button type="submit" disabled={!isDirty || isSubmitting}>
-              <Save aria-hidden="true" />
-              Apply changes
-            </Button>
-          </div>
-        </header>
-
-        {submissionError && (
-          <p role="alert" className={submitError()}>
-            <strong>Failed to apply changes.</strong> {submissionError}
-          </p>
-        )}
-
-        {methods.formState.submitCount > 0 &&
-          (methods.formState.errors.name || methods.formState.errors.groups) && (
-            <p role="alert" className={submitError()}>
-              Some fields need attention. Select a marked section, track, or level to review them.
-            </p>
-          )}
+        <DocumentToolbar />
+        <DocumentFeedback />
 
         <fieldset className={body()} disabled={isSubmitting}>
           <GroupForm />

@@ -1,4 +1,4 @@
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { useFieldArray, useFormContext, useFormState, useWatch } from "react-hook-form";
 
 import { Plus, Trash2 } from "lucide-react";
@@ -17,6 +17,10 @@ import {
   levelButton,
   levelList,
   levelNumber,
+  levelCaption,
+  levelEyebrow,
+  removeButton,
+  nameField,
   section,
   textarea,
 } from "./level.classes";
@@ -36,6 +40,7 @@ export const LevelForm: React.FC<ILevelForm> = ({ groupIndex, trackIndex }) => {
   //
 
   const fieldId = useId();
+  const pendingNameFocus = useRef<string | null>(null);
   const [selectedLevelIndex, setSelectedLevelIndex] = useState(0);
 
   // Form
@@ -69,7 +74,8 @@ export const LevelForm: React.FC<ILevelForm> = ({ groupIndex, trackIndex }) => {
   //
 
   const addLevel = (): void => {
-    append(createLevel(levels.length + 1));
+    pendingNameFocus.current = `groups.${groupIndex}.tracks.${trackIndex}.levels.${levels.length}.name`;
+    append(createLevel(levels.length + 1), { shouldFocus: false });
     setSelectedLevelIndex(levels.length);
   };
 
@@ -83,6 +89,9 @@ export const LevelForm: React.FC<ILevelForm> = ({ groupIndex, trackIndex }) => {
   // Aliases
   //
 
+  const nameRegistration = register(
+    `groups.${groupIndex}.tracks.${trackIndex}.levels.${selectedIndex}.name`,
+  );
   const levelErrors = errors.groups?.[groupIndex]?.tracks?.[trackIndex]?.levels?.[selectedIndex];
   const nameError = levelErrors?.name;
   const descriptionError = levelErrors?.description;
@@ -92,9 +101,15 @@ export const LevelForm: React.FC<ILevelForm> = ({ groupIndex, trackIndex }) => {
     <section className={section()} aria-labelledby={`${fieldId}-heading`}>
       <div className={header()}>
         <h4 id={`${fieldId}-heading`} className={heading()}>
-          Levels
+          Development levels
         </h4>
-        <Button type="button" variant="outline" onClick={addLevel} disabled={!canAddLevel}>
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={addLevel}
+          disabled={!canAddLevel || isSubmitting}
+        >
           <Plus aria-hidden="true" />
           Add level
         </Button>
@@ -106,34 +121,58 @@ export const LevelForm: React.FC<ILevelForm> = ({ groupIndex, trackIndex }) => {
           const levelLabel = `Level ${index + 1}: ${level?.name.trim() || "Unnamed level"}`;
 
           return (
-            <Button
+            <button
               key={levelField.fieldKey}
               type="button"
-              variant={index === selectedIndex ? "default" : "outline"}
               className={levelButton()}
-              aria-invalid={Boolean(
+              data-invalid={Boolean(
                 errors.groups?.[groupIndex]?.tracks?.[trackIndex]?.levels?.[index],
               )}
               aria-label={levelLabel}
+              title={levelLabel}
               aria-pressed={index === selectedIndex}
               onClick={() => setSelectedLevelIndex(index)}
             >
               <span className={levelNumber()} aria-hidden="true">
-                {index + 1}
+                {String(index + 1).padStart(2, "0")}
               </span>
-              {level?.name.trim() || "Unnamed level"}
-            </Button>
+            </button>
           );
         })}
       </div>
 
+      <div className={levelCaption()}>
+        <span className={levelEyebrow()}>
+          Level {selectedIndex + 1} of {levels.length}
+        </span>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon-sm"
+          className={removeButton()}
+          aria-label="Remove level"
+          title="Remove level"
+          onClick={removeLevel}
+          disabled={!canRemoveLevel || isSubmitting}
+        >
+          <Trash2 aria-hidden="true" />
+        </Button>
+      </div>
       <div key={selectedField.fieldKey} className={fieldsClass()}>
-        <div className={field()}>
+        <div className={nameField()}>
           <label htmlFor={`${fieldId}-name`} className={label()}>
             Level name
           </label>
           <input
-            {...register(`groups.${groupIndex}.tracks.${trackIndex}.levels.${selectedIndex}.name`)}
+            {...nameRegistration}
+            ref={(element) => {
+              nameRegistration.ref(element);
+              if (element && element.name === pendingNameFocus.current) {
+                element.focus();
+                element.select();
+                pendingNameFocus.current = null;
+              }
+            }}
             id={`${fieldId}-name`}
             type="text"
             maxLength={120}
@@ -188,16 +227,6 @@ export const LevelForm: React.FC<ILevelForm> = ({ groupIndex, trackIndex }) => {
             </p>
           )}
         </div>
-
-        <Button
-          type="button"
-          variant="destructive"
-          onClick={removeLevel}
-          disabled={!canRemoveLevel || isSubmitting}
-        >
-          <Trash2 aria-hidden="true" />
-          Remove level
-        </Button>
       </div>
     </section>
   );

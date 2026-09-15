@@ -1,6 +1,3 @@
-import { Link } from "react-router";
-
-import { XIcon } from "lucide-react";
 import { observer } from "mobx-react-lite";
 
 import { documentService } from "@/entities/document";
@@ -10,10 +7,9 @@ import {
   mapFormFieldsToDocument,
   type DocumentFF,
 } from "@/features/configure-document";
-import { ROUTES } from "@/shared/config/routes";
-import { buttonVariants } from "@/shared/ui/button";
+import { ScreenNavigation } from "@/widgets/screen-navigation";
 
-import { main } from "./settings.classes";
+import { background, main } from "./settings.classes";
 
 //
 //
@@ -29,23 +25,13 @@ const saveDocument = async (formFields: DocumentFF): Promise<void> => {
 export const SettingsScreen: React.FC = observer(() => {
   return (
     <section className={main()}>
+      <div className={background()} aria-hidden="true" />
       <DocumentForm
         defaultValues={mapDocumentToFormFields(documentService.document)}
         onSubmit={saveDocument}
       />
 
-      <Link
-        to={ROUTES.main}
-        aria-label="Back to main screen"
-        className={buttonVariants({
-          className: "absolute top-6 right-6",
-          size: "icon-lg",
-          variant: "default",
-        })}
-        viewTransition
-      >
-        <XIcon className="text-track-black" />
-      </Link>
+      <ScreenNavigation active="settings" />
     </section>
   );
 });

@@ -1,12 +1,22 @@
 import { FormProvider, useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Check, Circle, LoaderCircle, RotateCcw, Save } from "lucide-react";
 
 import { Button } from "@/shared/ui/button";
 
 import { documentSchema, type DocumentFF } from "../../schemas/document";
 import { GroupForm } from "../group-form/group.form";
-import { errorMessage, field, form, header, input, submitError } from "./document.classes";
+import {
+  actions,
+  body,
+  form,
+  header,
+  screenTitle,
+  status,
+  statusIcon,
+  submitError,
+} from "./document.classes";
 
 //
 //
@@ -26,8 +36,8 @@ export const DocumentForm: React.FC<IDocumentForm> = ({ defaultValues, onSubmit 
     resolver: zodResolver(documentSchema),
   });
 
-  const nameError = methods.formState.errors.name;
   const submissionError = methods.formState.errors.root?.message;
+  const { isDirty, isSubmitting, isSubmitSuccessful } = methods.formState;
 
   // Methods
   //
@@ -58,13 +68,42 @@ export const DocumentForm: React.FC<IDocumentForm> = ({ defaultValues, onSubmit 
         onSubmit={(event) => void submit(event)}
       >
         <header className={header()}>
-          <h1 className="text-2xl font-semibold">Configure document</h1>
-          <Button
-            type="submit"
-            disabled={!methods.formState.isDirty || methods.formState.isSubmitting}
-          >
-            Apply changes
-          </Button>
+          <h1 className={screenTitle()}>Document settings</h1>
+          <div className={actions()}>
+            <div className={status()} data-dirty={isDirty}>
+              {isSubmitting ? (
+                <LoaderCircle className={statusIcon({ busy: true })} aria-hidden="true" />
+              ) : isDirty ? (
+                <Circle className={statusIcon()} aria-hidden="true" />
+              ) : (
+                <Check className={statusIcon()} aria-hidden="true" />
+              )}
+              <output>
+                {isSubmitting
+                  ? "Applying…"
+                  : isDirty
+                    ? "Unsaved changes"
+                    : isSubmitSuccessful
+                      ? "Changes saved"
+                      : "All changes saved"}
+              </output>
+            </div>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              aria-label="Reset changes"
+              title="Reset changes"
+              disabled={!isDirty || isSubmitting}
+              onClick={() => methods.reset()}
+            >
+              <RotateCcw aria-hidden="true" />
+            </Button>
+            <Button type="submit" disabled={!isDirty || isSubmitting}>
+              <Save aria-hidden="true" />
+              Apply changes
+            </Button>
+          </div>
         </header>
 
         {submissionError && (
@@ -73,26 +112,16 @@ export const DocumentForm: React.FC<IDocumentForm> = ({ defaultValues, onSubmit 
           </p>
         )}
 
-        <div className={field()}>
-          <label htmlFor="schema-name" className="text-sm font-medium">
-            Schema name
-          </label>
-          <input
-            {...methods.register("name")}
-            id="schema-name"
-            type="text"
-            className={input()}
-            aria-invalid={Boolean(nameError)}
-            aria-describedby={nameError ? "schema-name-error" : undefined}
-          />
-          {nameError && (
-            <p id="schema-name-error" role="alert" className={errorMessage()}>
-              {nameError.message}
+        {methods.formState.submitCount > 0 &&
+          (methods.formState.errors.name || methods.formState.errors.groups) && (
+            <p role="alert" className={submitError()}>
+              Some fields need attention. Select a marked section, track, or level to review them.
             </p>
           )}
-        </div>
 
-        <GroupForm />
+        <fieldset className={body()} disabled={isSubmitting}>
+          <GroupForm />
+        </fieldset>
       </form>
     </FormProvider>
   );

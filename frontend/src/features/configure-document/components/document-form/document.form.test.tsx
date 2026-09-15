@@ -1,5 +1,6 @@
 import "@testing-library/jest-dom/vitest";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { GROUP_COLORS } from "@/shared/config/track-colors";
@@ -77,13 +78,16 @@ describe("<DocumentForm />", () => {
     render(<DocumentForm defaultValues={defaultValues} onSubmit={onSubmit} />);
 
     expect(screen.getByRole("form", { name: "Document settings" })).toBeVisible();
-    expect(screen.getByRole("heading", { name: "Configure document" })).toBeVisible();
+    expect(screen.getByRole("heading", { name: "General" })).toBeVisible();
 
-    const nameInput = screen.getByRole("textbox", { name: "Schema name" });
+    const nameInput = screen.getByRole("textbox", { name: "Matrix name" });
     const submitButton = screen.getByRole("button", { name: "Apply changes" });
 
     expect(nameInput).toHaveValue("Career Matrix");
     expect(submitButton).toBeDisabled();
+    expect(screen.getByRole("button", { name: "General" })).toHaveAttribute("aria-pressed", "true");
+    fireEvent.change(nameInput, { target: { value: "Updated Career Matrix" } });
+    fireEvent.click(screen.getByRole("button", { name: "FE Frontend" }));
     expect(screen.getByRole("button", { name: "Technology" })).toHaveAttribute(
       "aria-pressed",
       "true",
@@ -99,8 +103,6 @@ describe("<DocumentForm />", () => {
       "true",
     );
     expect(screen.getByRole("button", { name: "Remove level" })).toBeDisabled();
-
-    fireEvent.change(nameInput, { target: { value: "Updated Career Matrix" } });
 
     expect(submitButton).toBeEnabled();
     fireEvent.click(submitButton);
@@ -124,16 +126,14 @@ describe("<DocumentForm />", () => {
     fireEvent.change(screen.getByRole("textbox", { name: "Group name" }), {
       target: { value: "Product engineering" },
     });
-    fireEvent.change(screen.getByRole("combobox", { name: "Group color" }), {
-      target: { value: "purple" },
-    });
+    fireEvent.click(screen.getByRole("radio", { name: "Purple" }));
 
     fireEvent.click(screen.getByRole("button", { name: "Group 0" }));
     expect(screen.getByRole("textbox", { name: "Group name" })).toHaveValue("Group 0");
 
     fireEvent.click(screen.getByRole("button", { name: "Product engineering" }));
     expect(screen.getByRole("textbox", { name: "Group name" })).toHaveValue("Product engineering");
-    expect(screen.getByRole("combobox", { name: "Group color" })).toHaveValue("purple");
+    expect(screen.getByRole("radio", { name: "Purple" })).toBeChecked();
 
     fireEvent.click(screen.getByRole("button", { name: "Apply changes" }));
 
@@ -160,7 +160,8 @@ describe("<DocumentForm />", () => {
       "true",
     );
     expect(screen.getByRole("textbox", { name: "Group name" })).toHaveValue("New group");
-    expect(screen.getByRole("combobox", { name: "Group color" })).toHaveValue("blue");
+    expect(screen.getByRole("textbox", { name: "Group name" })).toHaveFocus();
+    expect(screen.getByRole("radio", { name: "Blue" })).toBeChecked();
 
     fireEvent.click(screen.getByRole("button", { name: "Apply changes" }));
 
@@ -229,6 +230,7 @@ describe("<DocumentForm />", () => {
     fireEvent.change(screen.getByRole("textbox", { name: "Track description" }), {
       target: { value: "Building backend services." },
     });
+    fireEvent.click(screen.getByText("Learning resources"));
     fireEvent.change(screen.getByRole("textbox", { name: "Track resources" }), {
       target: { value: "[Go](https://go.dev)" },
     });
@@ -261,6 +263,8 @@ describe("<DocumentForm />", () => {
 
     render(<DocumentForm defaultValues={defaultValues} onSubmit={onSubmit} />);
 
+    fireEvent.click(screen.getByRole("button", { name: "FE Frontend" }));
+
     fireEvent.click(screen.getByRole("button", { name: "Add track" }));
 
     expect(screen.getByRole("button", { name: "AA New track" })).toHaveAttribute(
@@ -269,6 +273,7 @@ describe("<DocumentForm />", () => {
     );
     expect(screen.getByRole("textbox", { name: "Track code" })).toHaveValue("AA");
     expect(screen.getByRole("textbox", { name: "Track name" })).toHaveValue("New track");
+    expect(screen.getByRole("textbox", { name: "Track name" })).toHaveFocus();
 
     fireEvent.click(screen.getByRole("button", { name: "Apply changes" }));
 
@@ -318,6 +323,8 @@ describe("<DocumentForm />", () => {
       />,
     );
 
+    fireEvent.click(screen.getByRole("button", { name: "AA Track 0" }));
+
     expect(screen.getByRole("button", { name: "Add track" })).toBeDisabled();
     expect(screen.getByRole("button", { name: "Add group" })).toBeDisabled();
   });
@@ -340,6 +347,8 @@ describe("<DocumentForm />", () => {
     };
 
     render(<DocumentForm defaultValues={values} onSubmit={onSubmit} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "FE Frontend" }));
 
     fireEvent.click(screen.getByRole("button", { name: "Level 2: Stage 2" }));
     fireEvent.change(screen.getByRole("textbox", { name: "Level name" }), {
@@ -379,6 +388,8 @@ describe("<DocumentForm />", () => {
 
     render(<DocumentForm defaultValues={defaultValues} onSubmit={onSubmit} />);
 
+    fireEvent.click(screen.getByRole("button", { name: "FE Frontend" }));
+
     fireEvent.click(screen.getByRole("button", { name: "Add level" }));
 
     expect(screen.getByRole("button", { name: "Level 2: Level 2" })).toHaveAttribute(
@@ -386,6 +397,7 @@ describe("<DocumentForm />", () => {
       "true",
     );
     expect(screen.getByRole("textbox", { name: "Level name" })).toHaveValue("Level 2");
+    expect(screen.getByRole("textbox", { name: "Level name" })).toHaveFocus();
 
     fireEvent.click(screen.getByRole("button", { name: "Apply changes" }));
 
@@ -416,6 +428,8 @@ describe("<DocumentForm />", () => {
     };
 
     render(<DocumentForm defaultValues={values} onSubmit={onSubmit} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "FE Frontend" }));
 
     fireEvent.click(screen.getByRole("button", { name: "Level 2: Stage 2" }));
     fireEvent.click(screen.getByRole("button", { name: "Remove level" }));
@@ -458,6 +472,148 @@ describe("<DocumentForm />", () => {
       />,
     );
 
+    fireEvent.click(screen.getByRole("button", { name: "FE Frontend" }));
+
     expect(screen.getByRole("button", { name: "Add level" })).toBeDisabled();
+  });
+
+  it("opens tracks directly across groups and retains their drafts", () => {
+    const values = { ...defaultValues, groups: [createGroup(0), createGroup(1)] };
+    render(
+      <DocumentForm
+        defaultValues={values}
+        onSubmit={vi.fn<(values: DocumentFF) => Promise<void>>()}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "AB Track 1" }));
+    expect(screen.getByRole("textbox", { name: "Group name" })).toHaveValue("Group 1");
+    fireEvent.change(screen.getByRole("textbox", { name: "Track name" }), {
+      target: { value: "Updated track" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "AA Track 0" }));
+    expect(screen.getByRole("textbox", { name: "Track name" })).toHaveValue("Track 0");
+    fireEvent.click(screen.getByRole("button", { name: "AB Updated track" }));
+    expect(screen.getByRole("textbox", { name: "Track name" })).toHaveValue("Updated track");
+  });
+
+  it("changes the group color with the keyboard", async () => {
+    const user = userEvent.setup();
+    render(
+      <DocumentForm
+        defaultValues={defaultValues}
+        onSubmit={vi.fn<(values: DocumentFF) => Promise<void>>()}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "FE Frontend" }));
+
+    screen.getByRole("radio", { name: "Aqua" }).focus();
+    await user.keyboard("{ArrowRight}");
+
+    expect(screen.getByRole("radio", { name: "Blue" })).toBeChecked();
+    expect(screen.getByRole("radio", { name: "Blue" })).toHaveFocus();
+    expect(screen.getByRole("status")).toHaveTextContent("Unsaved changes");
+  });
+
+  it("resets edits and added groups to the last saved document", async () => {
+    const onSubmit = vi.fn<(values: DocumentFF) => Promise<void>>().mockResolvedValue(undefined);
+    render(<DocumentForm defaultValues={defaultValues} onSubmit={onSubmit} />);
+
+    fireEvent.change(screen.getByRole("textbox", { name: "Matrix name" }), {
+      target: { value: "Saved matrix" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Apply changes" }));
+    await waitFor(() => expect(screen.getByRole("status")).toHaveTextContent("Changes saved"));
+
+    fireEvent.change(screen.getByRole("textbox", { name: "Matrix name" }), {
+      target: { value: "Discard this name" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Add group" }));
+    fireEvent.click(screen.getByRole("button", { name: "Reset changes" }));
+
+    expect(screen.queryByRole("button", { name: "New group" })).not.toBeInTheDocument();
+    expect(screen.getByRole("textbox", { name: "Track name" })).toHaveValue("Frontend");
+    expect(screen.getByRole("radio", { name: "Aqua" })).toBeChecked();
+    fireEvent.click(screen.getByRole("button", { name: "General" }));
+    expect(screen.getByRole("textbox", { name: "Matrix name" })).toHaveValue("Saved matrix");
+    expect(screen.getByRole("button", { name: "Apply changes" })).toBeDisabled();
+    expect(onSubmit).toHaveBeenCalledOnce();
+  });
+
+  it("retains a failed save for retry and reports the result", async () => {
+    const onSubmit = vi
+      .fn<(values: DocumentFF) => Promise<void>>()
+      .mockRejectedValueOnce(new Error("Disk unavailable"))
+      .mockResolvedValueOnce(undefined);
+    render(<DocumentForm defaultValues={defaultValues} onSubmit={onSubmit} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "FE Frontend" }));
+
+    fireEvent.change(screen.getByRole("textbox", { name: "Track name" }), {
+      target: { value: "New frontend" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Apply changes" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("Disk unavailable");
+    expect(screen.getByRole("status")).toHaveTextContent("Unsaved changes");
+    expect(screen.getByRole("textbox", { name: "Track name" })).toHaveValue("New frontend");
+    fireEvent.click(screen.getByRole("button", { name: "Apply changes" }));
+
+    await waitFor(() => expect(screen.getByRole("status")).toHaveTextContent("Changes saved"));
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(onSubmit).toHaveBeenCalledTimes(2);
+  });
+
+  it("preserves general and track edits when switching sections", async () => {
+    const onSubmit = vi.fn<(values: DocumentFF) => Promise<void>>().mockResolvedValue(undefined);
+    render(<DocumentForm defaultValues={defaultValues} onSubmit={onSubmit} />);
+
+    fireEvent.change(screen.getByRole("textbox", { name: "Matrix name" }), {
+      target: { value: "My career" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "FE Frontend" }));
+    expect(screen.queryByRole("textbox", { name: "Matrix name" })).not.toBeInTheDocument();
+    fireEvent.change(screen.getByRole("textbox", { name: "Track name" }), {
+      target: { value: "Interface engineering" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "General" }));
+    expect(screen.getByRole("textbox", { name: "Matrix name" })).toHaveValue("My career");
+    expect(screen.queryByRole("textbox", { name: "Track name" })).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Apply changes" }));
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledOnce());
+    expect(onSubmit.mock.calls[0]?.[0].name).toBe("My career");
+    expect(onSubmit.mock.calls[0]?.[0].groups[0]?.tracks[0]?.name).toBe("Interface engineering");
+    fireEvent.click(screen.getByRole("button", { name: "FE Interface engineering" }));
+    expect(screen.getByRole("textbox", { name: "Track name" })).toHaveValue(
+      "Interface engineering",
+    );
+  });
+
+  it("marks General when the matrix name is invalid while a track is open", async () => {
+    const onSubmit = vi.fn<(values: DocumentFF) => Promise<void>>();
+    render(<DocumentForm defaultValues={defaultValues} onSubmit={onSubmit} />);
+
+    fireEvent.change(screen.getByRole("textbox", { name: "Matrix name" }), {
+      target: { value: "" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "FE Frontend" }));
+    fireEvent.click(screen.getByRole("button", { name: "Apply changes" }));
+
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name: "General" })).toHaveAttribute(
+        "data-invalid",
+        "true",
+      ),
+    );
+    expect(screen.getByRole("alert")).toHaveTextContent("Some fields need attention");
+    expect(onSubmit).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: "General" }));
+    expect(screen.getByRole("textbox", { name: "Matrix name" })).toHaveAttribute(
+      "aria-invalid",
+      "true",
+    );
+    expect(screen.getByText("Enter a schema name")).toBeVisible();
   });
 });

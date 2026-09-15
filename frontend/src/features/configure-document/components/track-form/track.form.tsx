@@ -1,4 +1,4 @@
-import { useId, useState } from "react";
+import { useId, useRef } from "react";
 import { useFieldArray, useFormContext, useFormState, useWatch } from "react-hook-form";
 
 import { Plus, Trash2 } from "lucide-react";
@@ -17,9 +17,10 @@ import {
   label,
   section,
   textarea,
-  trackButton,
-  trackCode,
-  trackList,
+  titleInput,
+  removeButton,
+  resourcesSection,
+  resourcesSummary,
   wideField,
 } from "./track.classes";
 import { MAX_TRACKS } from "./track.constants";
@@ -30,14 +31,20 @@ import { createTrack } from "./track.utils";
 
 interface ITrackForm {
   groupIndex: number;
+  selectedTrackIndex: number;
+  onSelectTrack: (index: number) => void;
 }
 
-export const TrackForm: React.FC<ITrackForm> = ({ groupIndex }) => {
+export const TrackForm: React.FC<ITrackForm> = ({
+  groupIndex,
+  selectedTrackIndex,
+  onSelectTrack,
+}) => {
   // State
   //
 
   const fieldId = useId();
-  const [selectedTrackIndex, setSelectedTrackIndex] = useState(0);
+  const pendingNameFocus = useRef<string | null>(null);
 
   // Form
   //
@@ -71,20 +78,22 @@ export const TrackForm: React.FC<ITrackForm> = ({ groupIndex }) => {
   //
 
   const addTrack = (): void => {
-    append(createTrack(groups));
-    setSelectedTrackIndex(tracks.length);
+    pendingNameFocus.current = `groups.${groupIndex}.tracks.${tracks.length}.name`;
+    append(createTrack(groups), { shouldFocus: false });
+    onSelectTrack(tracks.length);
   };
 
   const removeTrack = (): void => {
     if (!canRemoveTrack) return;
 
     remove(selectedIndex);
-    setSelectedTrackIndex(Math.max(0, selectedIndex - 1));
+    onSelectTrack(Math.max(0, selectedIndex - 1));
   };
 
   // Aliases
   //
 
+  const nameRegistration = register(`groups.${groupIndex}.tracks.${selectedIndex}.name`);
   const trackErrors = errors.groups?.[groupIndex]?.tracks?.[selectedIndex];
   const codeError = trackErrors?.code;
   const nameError = trackErrors?.name;
@@ -94,34 +103,18 @@ export const TrackForm: React.FC<ITrackForm> = ({ groupIndex }) => {
     <section className={section()} aria-labelledby={`${fieldId}-heading`}>
       <div className={header()}>
         <h3 id={`${fieldId}-heading`} className={heading()}>
-          Tracks
+          Track details
         </h3>
-        <Button type="button" variant="outline" onClick={addTrack} disabled={!canAddTrack}>
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={addTrack}
+          disabled={!canAddTrack || isSubmitting}
+        >
           <Plus aria-hidden="true" />
           Add track
         </Button>
-      </div>
-
-      <div className={trackList()} aria-label="Select track">
-        {fields.map((trackField, index) => {
-          const track = tracks[index];
-
-          return (
-            <Button
-              key={trackField.fieldKey}
-              type="button"
-              variant={index === selectedIndex ? "default" : "outline"}
-              className={trackButton()}
-              aria-invalid={Boolean(errors.groups?.[groupIndex]?.tracks?.[index])}
-              aria-label={`${track?.code || "No code"} ${track?.name.trim() || "Unnamed track"}`}
-              aria-pressed={index === selectedIndex}
-              onClick={() => setSelectedTrackIndex(index)}
-            >
-              <span className={trackCode()}>{track?.code || "—"}</span>
-              {track?.name.trim() || "Unnamed track"}
-            </Button>
-          );
-        })}
       </div>
 
       <div key={selectedField.fieldKey} className={fieldsClass()}>
@@ -150,11 +143,19 @@ export const TrackForm: React.FC<ITrackForm> = ({ groupIndex }) => {
             Track name
           </label>
           <input
-            {...register(`groups.${groupIndex}.tracks.${selectedIndex}.name`)}
+            {...nameRegistration}
+            ref={(element) => {
+              nameRegistration.ref(element);
+              if (element && element.name === pendingNameFocus.current) {
+                element.focus();
+                element.select();
+                pendingNameFocus.current = null;
+              }
+            }}
             id={`${fieldId}-name`}
             type="text"
             maxLength={120}
-            className={controlClass()}
+            className={titleInput()}
             aria-invalid={Boolean(nameError)}
             aria-describedby={nameError ? `${fieldId}-name-error` : undefined}
           />
@@ -167,12 +168,15 @@ export const TrackForm: React.FC<ITrackForm> = ({ groupIndex }) => {
 
         <Button
           type="button"
-          variant="destructive"
+          variant="ghost"
+          size="icon"
+          className={removeButton()}
+          aria-label="Remove track"
+          title="Remove track"
           onClick={removeTrack}
           disabled={!canRemoveTrack || isSubmitting}
         >
           <Trash2 aria-hidden="true" />
-          Remove track
         </Button>
 
         <div className={wideField()}>
@@ -194,16 +198,20 @@ export const TrackForm: React.FC<ITrackForm> = ({ groupIndex }) => {
           )}
         </div>
 
-        <div className={wideField()}>
-          <label htmlFor={`${fieldId}-resources`} className={label()}>
-            Track resources
-          </label>
-          <textarea
-            {...register(`groups.${groupIndex}.tracks.${selectedIndex}.resources`)}
-            id={`${fieldId}-resources`}
-            className={textarea()}
-          />
-        </div>
+        <details className={resourcesSection()}>
+          <summary className={resourcesSummary()}>Learning resources</summary>
+          <div className={field()}>
+            <label htmlFor={`${fieldId}-resources`} className={label()}>
+              Track resources
+            </label>
+            <textarea
+              {...register(`groups.${groupIndex}.tracks.${selectedIndex}.resources`)}
+              id={`${fieldId}-resources`}
+              className={textarea()}
+              placeholder="Links, books, or notes to support this track…"
+            />
+          </div>
+        </details>
       </div>
 
       <LevelForm

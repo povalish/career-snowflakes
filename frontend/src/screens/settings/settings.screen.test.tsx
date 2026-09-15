@@ -38,13 +38,13 @@ describe("<SettingsScreen />", () => {
 
     render(<SettingsScreen />);
 
-    expect(screen.getByRole("textbox", { name: "Schema name" })).toHaveValue("Store schema");
+    expect(screen.getByRole("textbox", { name: "Matrix name" })).toHaveValue("Store schema");
   });
 
   it("saves submitted form fields through the document store", async () => {
     render(<SettingsScreen />);
 
-    fireEvent.change(screen.getByRole("textbox", { name: "Schema name" }), {
+    fireEvent.change(screen.getByRole("textbox", { name: "Matrix name" }), {
       target: { value: "Updated schema" },
     });
     fireEvent.click(screen.getByRole("button", { name: "Apply changes" }));

@@ -1,22 +1,39 @@
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { useFieldArray, useFormContext, useFormState, useWatch } from "react-hook-form";
 
-import { Plus, Trash2 } from "lucide-react";
+import { Check, FileText, Plus, Trash2 } from "lucide-react";
 
 import { GROUP_COLOR_CLASSES, GROUP_COLORS } from "@/shared/config/track-colors";
 import { Button } from "@/shared/ui/button";
 
 import type { DocumentFF } from "../../schemas/document";
+import { GeneralForm } from "../general-form/general.form";
 import { MAX_TRACKS } from "../track-form/track.constants";
 import { TrackForm } from "../track-form/track.form";
 import {
   colorDot,
+  colorOption,
+  colorInput,
+  colorCheck,
+  palette,
   control as controlClass,
   errorMessage,
   field,
   fields as fieldsClass,
   groupButton,
+  generalButton,
+  generalIcon,
   groupList,
+  sidebar,
+  workspace,
+  editor,
+  errorHint,
+  groupItem,
+  trackButton,
+  trackCode,
+  trackName,
+  count,
+  removeButton,
   header,
   heading,
   label,
@@ -32,13 +49,16 @@ export const GroupForm: React.FC = () => {
   // State
   //
   const fieldId = useId();
+  const pendingNameFocus = useRef<string | null>(null);
+  const [generalSelected, setGeneralSelected] = useState(true);
   const [selectedGroupIndex, setSelectedGroupIndex] = useState(0);
+  const [selectedTrackIndex, setSelectedTrackIndex] = useState(0);
 
   // Form
   //
 
   const { control, register } = useFormContext<DocumentFF>();
-  const { errors, isSubmitting } = useFormState({ control, name: "groups" });
+  const { errors, isSubmitting } = useFormState({ control, name: ["groups", "name"] });
   const groups = useWatch({ control, name: "groups" });
   const { fields, append, remove } = useFieldArray({
     control,
@@ -52,7 +72,7 @@ export const GroupForm: React.FC = () => {
   const selectedIndex = Math.min(selectedGroupIndex, fields.length - 1);
   const selectedField = fields[selectedIndex];
   const selectedGroup = groups[selectedIndex];
-  const trackCount = groups.reduce((count, group) => count + group.tracks.length, 0);
+  const trackCount = groups.reduce((total, group) => total + group.tracks.length, 0);
   const canAddGroup = groups.length < MAX_GROUPS && trackCount < MAX_TRACKS;
   const canRemoveGroup = groups.length > 1;
 
@@ -63,8 +83,11 @@ export const GroupForm: React.FC = () => {
 
   const addGroup = (): void => {
     const nextGroup = createGroup(groups);
-    append(nextGroup);
+    pendingNameFocus.current = `groups.${groups.length}.name`;
+    append(nextGroup, { shouldFocus: false });
+    setGeneralSelected(false);
     setSelectedGroupIndex(groups.length);
+    setSelectedTrackIndex(0);
   };
 
   const removeGroup = (): void => {
@@ -72,106 +95,202 @@ export const GroupForm: React.FC = () => {
 
     remove(selectedIndex);
     setSelectedGroupIndex(Math.max(0, selectedIndex - 1));
+    setSelectedTrackIndex(0);
   };
 
   // Aliases
   //
 
+  const nameRegistration = register(`groups.${selectedIndex}.name`);
   const nameError = errors.groups?.[selectedIndex]?.name;
   const colorError = errors.groups?.[selectedIndex]?.color;
 
   return (
-    <section className={section()} aria-labelledby={`${fieldId}-heading`}>
-      <div className={header()}>
-        <h2 id={`${fieldId}-heading`} className={heading()}>
-          Groups
-        </h2>
-        <Button type="button" variant="outline" onClick={addGroup} disabled={!canAddGroup}>
-          <Plus aria-hidden="true" />
-          Add group
-        </Button>
-      </div>
-
-      <div className={groupList()} aria-label="Select group">
-        {fields.map((groupField, index) => {
-          const group = groups[index];
-          const colorClass = group ? GROUP_COLOR_CLASSES[group.color] : GROUP_COLOR_CLASSES.aqua;
-
-          return (
-            <Button
-              key={groupField.fieldKey}
-              type="button"
-              variant={index === selectedIndex ? "default" : "outline"}
-              className={groupButton()}
-              aria-invalid={Boolean(errors.groups?.[index])}
-              aria-pressed={index === selectedIndex}
-              onClick={() => setSelectedGroupIndex(index)}
-            >
-              <span className={colorDot({ className: colorClass })} aria-hidden="true" />
-              {group?.name.trim() || "Unnamed group"}
-            </Button>
-          );
-        })}
-      </div>
-
-      <div key={selectedField.fieldKey}>
-        <div className={fieldsClass()}>
-          <div className={field()}>
-            <label htmlFor={`${fieldId}-name`} className={label()}>
-              Group name
-            </label>
-            <input
-              {...register(`groups.${selectedIndex}.name`)}
-              id={`${fieldId}-name`}
-              type="text"
-              className={controlClass()}
-              aria-invalid={Boolean(nameError)}
-              aria-describedby={nameError ? `${fieldId}-name-error` : undefined}
-            />
-            {nameError && (
-              <p id={`${fieldId}-name-error`} role="alert" className={errorMessage()}>
-                {nameError.message}
-              </p>
-            )}
-          </div>
-
-          <div className={field()}>
-            <label htmlFor={`${fieldId}-color`} className={label()}>
-              Group color
-            </label>
-            <select
-              {...register(`groups.${selectedIndex}.color`)}
-              id={`${fieldId}-color`}
-              className={controlClass()}
-              aria-invalid={Boolean(colorError)}
-              aria-describedby={colorError ? `${fieldId}-color-error` : undefined}
-            >
-              {GROUP_COLORS.map((color) => (
-                <option key={color} value={color}>
-                  {COLOR_NAMES[color]}
-                </option>
-              ))}
-            </select>
-            {colorError && (
-              <p id={`${fieldId}-color-error`} role="alert" className={errorMessage()}>
-                {colorError.message}
-              </p>
-            )}
-          </div>
-
-          <Button
-            type="button"
-            variant="destructive"
-            onClick={removeGroup}
-            disabled={!canRemoveGroup || isSubmitting}
-          >
-            <Trash2 aria-hidden="true" />
-            Remove group
-          </Button>
+    <div className={workspace()}>
+      <nav className={sidebar()} aria-label="Matrix structure">
+        {(errors.groups || errors.name) && (
+          <span id={`${fieldId}-invalid`} className={errorHint()}>
+            Contains invalid fields
+          </span>
+        )}
+        <button
+          type="button"
+          className={generalButton()}
+          aria-pressed={generalSelected}
+          data-invalid={Boolean(errors.name)}
+          aria-describedby={errors.name ? `${fieldId}-invalid` : undefined}
+          onClick={() => setGeneralSelected(true)}
+        >
+          <FileText className={generalIcon()} aria-hidden="true" />
+          General
+        </button>
+        <div className={header()}>
+          <h2 id={`${fieldId}-heading`} className={heading()}>
+            Your matrix
+          </h2>
+          <span className={count()}>{trackCount} tracks</span>
         </div>
+        <div className={groupList()}>
+          {fields.map((groupField, index) => {
+            const group = groups[index];
+            const colorClass = group ? GROUP_COLOR_CLASSES[group.color] : GROUP_COLOR_CLASSES.aqua;
 
-        <TrackForm groupIndex={selectedIndex} />
-      </div>
-    </section>
+            return (
+              <section key={groupField.fieldKey} className={groupItem({ className: colorClass })}>
+                <button
+                  type="button"
+                  className={groupButton()}
+                  aria-label={group?.name.trim() || "Unnamed group"}
+                  data-invalid={Boolean(errors.groups?.[index])}
+                  aria-describedby={errors.groups?.[index] ? `${fieldId}-invalid` : undefined}
+                  aria-pressed={!generalSelected && index === selectedIndex}
+                  onClick={() => {
+                    setGeneralSelected(false);
+                    setSelectedGroupIndex(index);
+                    setSelectedTrackIndex(0);
+                  }}
+                >
+                  <span className={colorDot()} aria-hidden="true" />
+                  <span className={trackName()}>{group?.name.trim() || "Unnamed group"}</span>
+                  <span className={count()} aria-hidden="true">
+                    {group?.tracks.length}
+                  </span>
+                </button>
+                {group?.tracks.map((track, trackIndex) => (
+                  <button
+                    key={track.id}
+                    type="button"
+                    className={trackButton()}
+                    aria-label={`${track.code || "No code"} ${track.name.trim() || "Unnamed track"}`}
+                    aria-pressed={
+                      !generalSelected &&
+                      index === selectedIndex &&
+                      trackIndex === Math.min(selectedTrackIndex, group.tracks.length - 1)
+                    }
+                    data-invalid={Boolean(errors.groups?.[index]?.tracks?.[trackIndex])}
+                    aria-describedby={
+                      errors.groups?.[index]?.tracks?.[trackIndex]
+                        ? `${fieldId}-invalid`
+                        : undefined
+                    }
+                    onClick={() => {
+                      setGeneralSelected(false);
+                      setSelectedGroupIndex(index);
+                      setSelectedTrackIndex(trackIndex);
+                    }}
+                  >
+                    <span className={trackCode()}>{track.code || "—"}</span>
+                    <span className={trackName()}>{track.name.trim() || "Unnamed track"}</span>
+                    <span className={count()} aria-label={`${track.levels.length} levels`}>
+                      {track.levels.length}
+                    </span>
+                  </button>
+                ))}
+              </section>
+            );
+          })}
+        </div>
+        <Button
+          type="button"
+          variant="ghost"
+          onClick={addGroup}
+          disabled={!canAddGroup || isSubmitting}
+        >
+          <Plus aria-hidden="true" /> Add group
+        </Button>
+      </nav>
+
+      {generalSelected ? (
+        <div key="general" className={editor()}>
+          <GeneralForm />
+        </div>
+      ) : (
+        <div
+          key={selectedField.fieldKey}
+          className={editor({ className: GROUP_COLOR_CLASSES[selectedGroup.color] })}
+        >
+          <section className={section()} aria-label="Group settings">
+            <div className={header()}>
+              <span className={heading()}>Group settings</span>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon-sm"
+                className={removeButton()}
+                aria-label="Remove group"
+                title="Remove group"
+                onClick={removeGroup}
+                disabled={!canRemoveGroup || isSubmitting}
+              >
+                <Trash2 aria-hidden="true" />
+              </Button>
+            </div>
+            <div className={fieldsClass()}>
+              <div className={field()}>
+                <label htmlFor={`${fieldId}-name`} className={label()}>
+                  Group name
+                </label>
+                <input
+                  {...nameRegistration}
+                  ref={(element) => {
+                    nameRegistration.ref(element);
+                    if (element && element.name === pendingNameFocus.current) {
+                      element.focus();
+                      element.select();
+                      pendingNameFocus.current = null;
+                    }
+                  }}
+                  id={`${fieldId}-name`}
+                  type="text"
+                  className={controlClass()}
+                  aria-invalid={Boolean(nameError)}
+                  aria-describedby={nameError ? `${fieldId}-name-error` : undefined}
+                />
+                {nameError && (
+                  <p id={`${fieldId}-name-error`} role="alert" className={errorMessage()}>
+                    {nameError.message}
+                  </p>
+                )}
+              </div>
+
+              <fieldset className={field()}>
+                <legend className={label()}>Group color</legend>
+                <div className={palette()}>
+                  {GROUP_COLORS.map((color) => (
+                    <label
+                      key={color}
+                      className={colorOption({ className: GROUP_COLOR_CLASSES[color] })}
+                      title={COLOR_NAMES[color]}
+                    >
+                      <input
+                        {...register(`groups.${selectedIndex}.color`)}
+                        type="radio"
+                        value={color}
+                        aria-label={COLOR_NAMES[color]}
+                        className={colorInput()}
+                        aria-describedby={colorError ? `${fieldId}-color-error` : undefined}
+                      />
+                      <span className={colorCheck()} aria-hidden="true">
+                        <Check />
+                      </span>
+                    </label>
+                  ))}
+                </div>
+                {colorError && (
+                  <p id={`${fieldId}-color-error`} role="alert" className={errorMessage()}>
+                    {colorError.message}
+                  </p>
+                )}
+              </fieldset>
+            </div>
+          </section>
+          <TrackForm
+            groupIndex={selectedIndex}
+            selectedTrackIndex={selectedTrackIndex}
+            onSelectTrack={setSelectedTrackIndex}
+          />
+        </div>
+      )}
+    </div>
   );
 };

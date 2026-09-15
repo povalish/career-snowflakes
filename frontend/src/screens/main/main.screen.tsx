@@ -1,15 +1,12 @@
 import { useState } from "react";
-import { Link } from "react-router";
 
-import { Settings } from "lucide-react";
 import { observer } from "mobx-react-lite";
 
 import { documentService } from "@/entities/document";
-import { ROUTES } from "@/shared/config/routes";
-import { buttonVariants } from "@/shared/ui/button";
 import { ChartView } from "@/widgets/chart-view";
 import { Drawer } from "@/widgets/drawer";
 import { ListView } from "@/widgets/list-view";
+import { ScreenNavigation } from "@/widgets/screen-navigation";
 
 import { background, chartContainer, content, main } from "./main.classes";
 import { mapDocumentToChartTracks } from "./utils/mapDocumentToChartTracks";
@@ -78,18 +75,7 @@ export const MainScreen: React.FC = observer(() => {
         />
       </div>
 
-      <Link
-        to={ROUTES.settings}
-        aria-label="Open settings screen"
-        className={buttonVariants({
-          className: "absolute top-6 right-6",
-          size: "icon-lg",
-          variant: "default",
-        })}
-        viewTransition
-      >
-        <Settings className="text-track-black" />
-      </Link>
+      <ScreenNavigation active="main" />
 
       <Drawer
         open={drawerOpen}

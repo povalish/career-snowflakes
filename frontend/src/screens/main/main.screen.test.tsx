@@ -7,6 +7,9 @@ import type { Document } from "@/entities/document";
 
 import { MainScreen } from "./main.screen";
 
+//
+//
+
 const bridgeMocks = vi.hoisted(() => ({
   save: vi.fn<(document: Document) => Promise<Document>>(),
 }));

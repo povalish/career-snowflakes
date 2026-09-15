@@ -84,6 +84,8 @@ export const MainScreen: React.FC = observer(() => {
         onSelectLevel={(level) => documentService.selectLevel(level)}
         onSetProgress={(level) => setProgress(drawerSelection?.track.id, level)}
       />
+
+      <div className="absolute bottom-0 w-1/2 h-1 bg-orange-400 rounded-tl-2xl rounded-tr-2xl" />
     </main>
   );
 });

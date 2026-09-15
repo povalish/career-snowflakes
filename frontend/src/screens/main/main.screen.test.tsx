@@ -18,6 +18,10 @@ vi.mock("@/entities/document/document-bridge.service", () => ({
   DocumentBridgeService: { save: bridgeMocks.save },
 }));
 
+vi.mock("react-router", () => ({
+  Link: () => null
+}))
+
 //
 //
 

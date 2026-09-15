@@ -1,8 +1,12 @@
 import { useState } from "react";
+import { Link } from "react-router";
 
+import { Settings } from "lucide-react";
 import { observer } from "mobx-react-lite";
 
 import { documentService } from "@/entities/document";
+import { ROUTES } from "@/shared/config/routes";
+import { buttonVariants } from "@/shared/ui/button";
 import { ChartView } from "@/widgets/chart-view";
 import { Drawer } from "@/widgets/drawer";
 import { ListView } from "@/widgets/list-view";
@@ -74,6 +78,19 @@ export const MainScreen: React.FC = observer(() => {
         />
       </div>
 
+      <Link
+        to={ROUTES.settings}
+        aria-label="Open settings screen"
+        className={buttonVariants({
+          className: "absolute top-6 right-6",
+          size: "icon-lg",
+          variant: "default",
+        })}
+        viewTransition
+      >
+        <Settings className="text-track-black" />
+      </Link>
+
       <Drawer
         open={drawerOpen}
         group={drawerSelection?.group}
@@ -85,7 +102,7 @@ export const MainScreen: React.FC = observer(() => {
         onSetProgress={(level) => setProgress(drawerSelection?.track.id, level)}
       />
 
-      <div className="absolute bottom-0 w-1/2 h-1 bg-orange-400 rounded-tl-2xl rounded-tr-2xl" />
+      <div className="absolute bottom-0 w-1/2 h-1 bg-primary rounded-tl-2xl rounded-tr-2xl" />
     </main>
   );
 });

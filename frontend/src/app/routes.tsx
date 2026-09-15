@@ -1,12 +1,16 @@
+import type { RouteObject } from "react-router";
 import { createMemoryRouter } from "react-router";
 
 import { MainScreen } from "@/screens/main";
 import { SettingsScreen } from "@/screens/settings";
+import { ROUTES } from "@/shared/config/routes";
 
 //
 //
 
-export const router = createMemoryRouter([
-  { path: "/", element: <MainScreen /> },
-  { path: "/settings", element: <SettingsScreen /> },
-]);
+const routes = [
+  { path: ROUTES.main, element: <MainScreen /> },
+  { path: ROUTES.settings, element: <SettingsScreen /> },
+] satisfies RouteObject[];
+
+export const router = createMemoryRouter(routes);

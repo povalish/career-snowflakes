@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
+import { LoaderCircle } from "lucide-react";
 import { observer } from "mobx-react-lite";
 
 import { documentService } from "@/entities/document";
@@ -8,7 +9,16 @@ import { Drawer } from "@/widgets/drawer";
 import { ListView } from "@/widgets/list-view";
 import { ScreenNavigation } from "@/widgets/screen-navigation";
 
-import { background, chartContainer, content, main } from "./main.classes";
+import {
+  background,
+  bottomAccent,
+  chartContainer,
+  content,
+  loadError,
+  loadingIcon,
+  loadingState,
+  main,
+} from "./main.classes";
 import { mapDocumentToChartTracks } from "./utils/mapDocumentToChartTracks";
 import { mapDocumentToListViewGroups } from "./utils/mapDocumentToListViewGroups";
 
@@ -28,6 +38,53 @@ export const MainScreen: React.FC = observer(() => {
   //
 
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadErrorMessage, setLoadErrorMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    let active = true;
+
+    const loadDocument = async (): Promise<void> => {
+      try {
+        await documentService.load();
+      } catch (error) {
+        if (!active) return;
+        setLoadErrorMessage(error instanceof Error ? error.message : "Could not load document");
+      } finally {
+        if (active) setIsLoading(false);
+      }
+    };
+
+    void loadDocument();
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  if (isLoading) {
+    return (
+      <main className={main()}>
+        <div className={background()} aria-hidden="true" />
+        <output className={loadingState()}>
+          <LoaderCircle className={loadingIcon()} aria-hidden="true" />
+          Loading document…
+        </output>
+      </main>
+    );
+  }
+
+  if (loadErrorMessage) {
+    return (
+      <main className={main()}>
+        <div className={background()} aria-hidden="true" />
+        <p className={loadError()} role="alert">
+          Could not load document: {loadErrorMessage}
+        </p>
+      </main>
+    );
+  }
+
   const chartTracks = mapDocumentToChartTracks(documentService.document);
   const listGroups = mapDocumentToListViewGroups(documentService.document);
 
@@ -88,7 +145,7 @@ export const MainScreen: React.FC = observer(() => {
         onSetProgress={(level) => setProgress(drawerSelection?.track.id, level)}
       />
 
-      <div className="absolute bottom-0 w-1/2 h-1 bg-primary rounded-tl-2xl rounded-tr-2xl" />
+      <div className={bottomAccent()} />
     </main>
   );
 });

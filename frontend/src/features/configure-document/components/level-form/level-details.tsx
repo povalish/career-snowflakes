@@ -25,7 +25,7 @@ export const LevelDetails: React.FC<ILevelDetails> = ({ groupIndex, trackIndex, 
   const examplesError = levelErrors?.examplesText;
 
   return (
-    <>
+    <div className="flex flex-col">
       <div className={field()}>
         <label htmlFor={`${fieldId}-description`} className={label()}>
           Level description
@@ -66,6 +66,6 @@ export const LevelDetails: React.FC<ILevelDetails> = ({ groupIndex, trackIndex, 
           </p>
         )}
       </div>
-    </>
+    </div>
   );
 };

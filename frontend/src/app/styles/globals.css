@@ -179,7 +179,7 @@ View Transition
 
 */
 
-@keyframes page-exit {
+/* @keyframes page-exit {
   from {
     opacity: 1;
     transform: scale(1);
@@ -227,4 +227,4 @@ View Transition
   ::view-transition-new(*) {
     animation: none !important;
   }
-}
+} */

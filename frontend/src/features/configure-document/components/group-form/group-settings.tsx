@@ -7,6 +7,7 @@ import { Button } from "@/shared/ui/button";
 
 import type { DocumentFF } from "../../schemas/document";
 import { GroupColorField } from "./group-color-field";
+import { useGroupFormContext } from "./group-form.context";
 import {
   header,
   heading,
@@ -24,20 +25,21 @@ import {
 
 interface IGroupSettings {
   groupIndex: number;
-  canRemoveGroup: boolean;
-  onRemoveGroup: () => void;
-  onNameMount: (element: HTMLInputElement | null) => void;
 }
 
-export const GroupSettings: React.FC<IGroupSettings> = ({
-  groupIndex,
-  canRemoveGroup,
-  onRemoveGroup,
-  onNameMount,
-}) => {
+export const GroupSettings: React.FC<IGroupSettings> = ({ groupIndex }) => {
   const fieldId = useId();
+
+  // Form
+  //
+
+  const { canRemoveGroup, removeGroup, focusNewName } = useGroupFormContext();
   const { control, register } = useFormContext<DocumentFF>();
   const { errors, isSubmitting } = useFormState({ control, name: `groups.${groupIndex}.name` });
+
+  // Aliases
+  //
+
   const nameRegistration = register(`groups.${groupIndex}.name`);
   const nameError = errors.groups?.[groupIndex]?.name;
 
@@ -52,22 +54,24 @@ export const GroupSettings: React.FC<IGroupSettings> = ({
           className={removeButton()}
           aria-label="Remove group"
           title="Remove group"
-          onClick={onRemoveGroup}
+          onClick={removeGroup}
           disabled={!canRemoveGroup || isSubmitting}
         >
           <Trash2 aria-hidden="true" />
         </Button>
       </div>
+
       <div className={fieldsClass()}>
         <div className={field()}>
           <label htmlFor={`${fieldId}-name`} className={label()}>
             Group name
           </label>
+
           <input
             {...nameRegistration}
             ref={(element) => {
               nameRegistration.ref(element);
-              onNameMount(element);
+              focusNewName(element);
             }}
             id={`${fieldId}-name`}
             type="text"
@@ -75,6 +79,7 @@ export const GroupSettings: React.FC<IGroupSettings> = ({
             aria-invalid={Boolean(nameError)}
             aria-describedby={nameError ? `${fieldId}-name-error` : undefined}
           />
+
           {nameError && (
             <p id={`${fieldId}-name-error`} role="alert" className={errorMessage()}>
               {nameError.message}

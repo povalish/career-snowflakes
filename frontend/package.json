@@ -1,21 +1,26 @@
 {
   "name": "career-snowflakes",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "----- build -----": "",
     "build:dev": "pnpm typecheck && vite build --minify false --mode development",
     "build": "pnpm typecheck && vite build --mode production",
+    "----- preview -----": "",
     "preview": "vite preview",
+    "----- checks -----": "",
     "typecheck": "tsc --noEmit",
     "lint": "oxlint --type-aware --max-warnings 0",
     "lint:fix": "pnpm lint --fix",
     "format": "oxfmt --write .",
     "format:check": "oxfmt --check .",
+    "----- tests -----": "",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
+    "----- overall check -----": "",
     "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test"
   },
   "dependencies": {

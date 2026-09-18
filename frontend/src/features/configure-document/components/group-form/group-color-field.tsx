@@ -26,13 +26,16 @@ interface IGroupColorField {
 
 export const GroupColorField: React.FC<IGroupColorField> = ({ groupIndex }) => {
   const fieldId = useId();
+
   const { control, register } = useFormContext<DocumentFF>();
   const { errors } = useFormState({ control, name: `groups.${groupIndex}.color` });
+
   const colorError = errors.groups?.[groupIndex]?.color;
 
   return (
     <fieldset className={field()}>
       <legend className={label()}>Group color</legend>
+
       <div className={palette()}>
         {GROUP_COLORS.map((color) => (
           <label
@@ -48,12 +51,14 @@ export const GroupColorField: React.FC<IGroupColorField> = ({ groupIndex }) => {
               className={colorInput()}
               aria-describedby={colorError ? `${fieldId}-color-error` : undefined}
             />
+
             <span className={colorCheck()} aria-hidden="true">
               <Check />
             </span>
           </label>
         ))}
       </div>
+
       {colorError && (
         <p id={`${fieldId}-color-error`} role="alert" className={errorMessage()}>
           {colorError.message}

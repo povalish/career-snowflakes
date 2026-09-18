@@ -10,7 +10,7 @@ export const field = cva(`
 export const label = cva("text-xs text-muted-foreground");
 
 export const textarea = cva(`
-  [scrollbar-width:none] [&::-webkit-scrollbar]:hidden
+  scrollbar-none [&::-webkit-scrollbar]:hidden
   min-h-24 w-full min-w-0 resize-y
   rounded-md border border-input/60 bg-background/30 px-3 py-2 shadow-xs
   text-sm leading-6 outline-none transition-[color,box-shadow]

@@ -11,8 +11,8 @@ export const wideField = cva(`
 export const label = cva("text-xs text-muted-foreground");
 
 export const textarea = cva(`
-  [scrollbar-width:none] [&::-webkit-scrollbar]:hidden
-  min-h-16 w-full min-w-0 resize-y
+  scrollbar-none [&::-webkit-scrollbar]:hidden
+  min-h-32 w-full min-w-0 resize-y field-sizing-content
   rounded-md border border-input/60 bg-background/30 px-3 py-2.5
   text-sm leading-6 outline-none transition-[border-color,box-shadow]
   placeholder:text-muted-foreground/60

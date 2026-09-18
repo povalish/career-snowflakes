@@ -3,6 +3,7 @@ import { useFormContext, useFormState } from "react-hook-form";
 import { GROUP_COLOR_CLASSES } from "@/shared/config/track-colors";
 
 import type { DocumentFF } from "../../schemas/document";
+import { useGroupFormContext } from "./group-form.context";
 import {
   groupItem,
   groupButton,
@@ -19,22 +20,20 @@ import {
 interface IGroupNavigation {
   group: DocumentFF["groups"][number] | undefined;
   groupIndex: number;
-  selected: boolean;
-  selectedTrackIndex: number;
   invalidDescriptionId: string;
-  onSelectTrack: (groupIndex: number, trackIndex: number) => void;
 }
 
 export const GroupNavigation: React.FC<IGroupNavigation> = ({
   group,
   groupIndex,
-  selected,
-  selectedTrackIndex,
   invalidDescriptionId,
-  onSelectTrack,
 }) => {
   const { control } = useFormContext<DocumentFF>();
   const { errors } = useFormState({ control, name: `groups.${groupIndex}` });
+  const { isGeneralTabSelected, selectedGroupIndex, selectedTrackIndex, selectTrack } =
+    useGroupFormContext();
+
+  const selected = !isGeneralTabSelected && groupIndex === selectedGroupIndex;
   const groupErrors = errors.groups?.[groupIndex];
   const colorClass = group ? GROUP_COLOR_CLASSES[group.color] : GROUP_COLOR_CLASSES.aqua;
 
@@ -47,7 +46,7 @@ export const GroupNavigation: React.FC<IGroupNavigation> = ({
         data-invalid={Boolean(groupErrors)}
         aria-describedby={groupErrors ? invalidDescriptionId : undefined}
         aria-pressed={selected}
-        onClick={() => onSelectTrack(groupIndex, 0)}
+        onClick={() => selectTrack(groupIndex, 0)}
       >
         <span className={colorDot()} aria-hidden="true" />
         <span className={trackName()}>{group?.name.trim() || "Unnamed group"}</span>
@@ -55,6 +54,7 @@ export const GroupNavigation: React.FC<IGroupNavigation> = ({
           {group?.tracks.length}
         </span>
       </button>
+
       {group?.tracks.map((track, trackIndex) => (
         <button
           key={track.id}
@@ -66,7 +66,7 @@ export const GroupNavigation: React.FC<IGroupNavigation> = ({
           }
           data-invalid={Boolean(groupErrors?.tracks?.[trackIndex])}
           aria-describedby={groupErrors?.tracks?.[trackIndex] ? invalidDescriptionId : undefined}
-          onClick={() => onSelectTrack(groupIndex, trackIndex)}
+          onClick={() => selectTrack(groupIndex, trackIndex)}
         >
           <span className={trackCode()}>{track.code || "—"}</span>
           <span className={trackName()}>{track.name.trim() || "Unnamed track"}</span>

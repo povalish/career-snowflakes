@@ -105,6 +105,7 @@ export const LevelForm: React.FC<ILevelForm> = ({ groupIndex, trackIndex }) => {
         selectedIndex={selectedIndex}
         onSelectLevel={setSelectedLevelIndex}
       />
+
       <LevelEditor
         fieldKey={selectedField.fieldKey}
         groupIndex={groupIndex}

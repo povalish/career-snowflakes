@@ -25,3 +25,22 @@ export const content = cva(`
 export const chartContainer = cva(`
   w-full max-w-[min(92vw,72vh,46rem)]
 `);
+
+export const loadingState = cva(`
+  flex items-center gap-2
+  text-sm text-muted-foreground
+`);
+
+export const loadingIcon = cva(`
+  size-4 shrink-0 animate-spin
+  motion-reduce:animate-none
+`);
+
+export const loadError = cva(`
+  max-w-md text-center text-sm text-destructive
+`);
+
+export const bottomAccent = cva(`
+  absolute bottom-0 h-1 w-1/2
+  rounded-tl-2xl rounded-tr-2xl bg-primary
+`);

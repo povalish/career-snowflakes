@@ -6,6 +6,7 @@ import { Plus } from "lucide-react";
 import { Button } from "@/shared/ui/button";
 
 import type { DocumentFF } from "../../schemas/document";
+import { useGroupFormContext } from "../group-form/group-form.context";
 import { LevelForm } from "../level-form/level.form";
 import { TrackFields } from "./track-fields";
 import { section, header, heading } from "./track.classes";
@@ -17,15 +18,11 @@ import { createTrack } from "./track.utils";
 
 interface ITrackForm {
   groupIndex: number;
-  selectedTrackIndex: number;
-  onSelectTrack: (index: number) => void;
 }
 
-export const TrackForm: React.FC<ITrackForm> = ({
-  groupIndex,
-  selectedTrackIndex,
-  onSelectTrack,
-}) => {
+export const TrackForm: React.FC<ITrackForm> = ({ groupIndex }) => {
+  const { selectedTrackIndex, selectTrack } = useGroupFormContext();
+
   // State
   //
 
@@ -66,14 +63,14 @@ export const TrackForm: React.FC<ITrackForm> = ({
   const addTrack = (): void => {
     pendingNameFocus.current = `groups.${groupIndex}.tracks.${tracks.length}.name`;
     append(createTrack(groups), { shouldFocus: false });
-    onSelectTrack(tracks.length);
+    selectTrack(groupIndex, tracks.length);
   };
 
   const removeTrack = (): void => {
     if (!canRemoveTrack) return;
 
     remove(selectedIndex);
-    onSelectTrack(Math.max(0, selectedIndex - 1));
+    selectTrack(groupIndex, Math.max(0, selectedIndex - 1));
   };
 
   const focusNewName = (element: HTMLInputElement | null): void => {

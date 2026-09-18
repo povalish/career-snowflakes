@@ -33,10 +33,10 @@ func main() {
 	})
 	window := app.Window.NewWithOptions(application.WebviewWindowOptions{
 		Title:            "Career Snowflakes",
-		Width:            1380,
-		Height:           920,
-		MinWidth:         760,
-		MinHeight:        620,
+		Width:            940,
+		Height:           850,
+		MinWidth:         940,
+		MinHeight:        850,
 		BackgroundColour: application.NewRGB(40, 40, 40),
 		Mac: application.MacWindow{
 			TitleBar:                application.MacTitleBarHiddenInsetUnified,

@@ -9,6 +9,7 @@ import { field, label, input, errorMessage } from "./matrix-name-field.classes";
 
 export const MatrixNameField: React.FC = () => {
   const fieldId = useId();
+
   const { control, register } = useFormContext<DocumentFF>();
   const { errors } = useFormState({ control, name: "name" });
 
@@ -17,6 +18,7 @@ export const MatrixNameField: React.FC = () => {
       <label htmlFor={`${fieldId}-name`} className={label()}>
         Matrix name
       </label>
+
       <input
         {...register("name")}
         id={`${fieldId}-name`}
@@ -25,6 +27,7 @@ export const MatrixNameField: React.FC = () => {
         aria-invalid={Boolean(errors.name)}
         aria-describedby={errors.name ? `${fieldId}-error` : undefined}
       />
+
       {errors.name && (
         <p id={`${fieldId}-error`} role="alert" className={errorMessage()}>
           {errors.name.message}

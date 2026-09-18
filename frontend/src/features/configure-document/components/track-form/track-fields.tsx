@@ -37,11 +37,13 @@ export const TrackFields: React.FC<ITrackFields> = ({
   onNameMount,
 }) => {
   const fieldId = useId();
+
   const { control, register } = useFormContext<DocumentFF>();
   const { errors, isSubmitting } = useFormState({
     control,
     name: `groups.${groupIndex}.tracks.${trackIndex}`,
   });
+
   const nameRegistration = register(`groups.${groupIndex}.tracks.${trackIndex}.name`);
   const trackErrors = errors.groups?.[groupIndex]?.tracks?.[trackIndex];
   const codeError = trackErrors?.code;

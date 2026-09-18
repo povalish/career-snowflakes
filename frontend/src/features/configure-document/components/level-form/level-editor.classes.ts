@@ -17,8 +17,7 @@ export const removeButton = cva(`
 
 export const fields = cva(`
   motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-1 motion-safe:duration-150
-  mt-2 grid gap-3
-  min-[900px]:grid-cols-2
+  mt-2 flex flex-col gap-3
 `);
 
 export const label = cva("text-xs text-muted-foreground");

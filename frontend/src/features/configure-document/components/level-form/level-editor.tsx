@@ -73,6 +73,7 @@ export const LevelEditor: React.FC<ILevelEditor> = ({
           <Trash2 aria-hidden="true" />
         </Button>
       </div>
+
       <div key={fieldKey} className={fieldsClass()}>
         <div className={nameField()}>
           <label htmlFor={`${fieldId}-name`} className={label()}>

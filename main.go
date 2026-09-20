@@ -33,6 +33,7 @@ func main() {
 	})
 	window := app.Window.NewWithOptions(application.WebviewWindowOptions{
 		Title:            "Career Snowflakes",
+		Frameless:        true,
 		Width:            940,
 		Height:           850,
 		MinWidth:         940,

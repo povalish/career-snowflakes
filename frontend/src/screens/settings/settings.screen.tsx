@@ -19,6 +19,13 @@ const saveDocument = async (formFields: DocumentFF): Promise<void> => {
   await documentService.save(candidate);
 };
 
+const importDocument = async (): Promise<DocumentFF | null> => {
+  const document = await documentService.import();
+  return document ? mapDocumentToFormFields(document) : null;
+};
+
+const exportDocument = async (): Promise<boolean> => documentService.export();
+
 //
 //
 
@@ -29,6 +36,8 @@ export const SettingsScreen: React.FC = observer(() => {
       <DocumentForm
         defaultValues={mapDocumentToFormFields(documentService.document)}
         onSubmit={saveDocument}
+        onImport={importDocument}
+        onExport={exportDocument}
       />
 
       <ScreenNavigation active="settings" />

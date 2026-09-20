@@ -4,15 +4,16 @@ import { cva } from "class-variance-authority";
 //
 
 export const header = cva(`
-  relative z-10 flex shrink-0 items-center justify-end
+  relative z-10 flex shrink-0 items-center
   border-b border-border/70 pt-20 pb-3
-  md:h-20 md:py-0 md:pr-24 md:pl-20
+  md:h-20 md:py-0 md:pr-28
 `);
 
 export const screenTitle = cva("sr-only");
 
 export const actions = cva(`
-  flex flex-wrap items-center justify-end gap-2
+  w-full
+  flex flex-wrap items-center justify-between gap-2
 `);
 
 export const status = cva(`

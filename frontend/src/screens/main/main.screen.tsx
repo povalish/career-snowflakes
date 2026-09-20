@@ -70,6 +70,7 @@ export const MainScreen: React.FC = observer(() => {
           <LoaderCircle className={loadingIcon()} aria-hidden="true" />
           Loading document…
         </output>
+        <ScreenNavigation active="main" />
       </main>
     );
   }
@@ -81,6 +82,7 @@ export const MainScreen: React.FC = observer(() => {
         <p className={loadError()} role="alert">
           Could not load document: {loadErrorMessage}
         </p>
+        <ScreenNavigation active="main" />
       </main>
     );
   }

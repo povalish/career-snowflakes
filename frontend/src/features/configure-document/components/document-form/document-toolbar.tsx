@@ -1,6 +1,6 @@
 import { useFormContext, useFormState } from "react-hook-form";
 
-import { Check, Circle, LoaderCircle, RotateCcw, Save } from "lucide-react";
+import { Check, Circle, Download, LoaderCircle, RotateCcw, Save, Upload } from "lucide-react";
 
 import { Button } from "@/shared/ui/button";
 
@@ -10,7 +10,17 @@ import { header, screenTitle, actions, status, statusIcon } from "./document-too
 //
 //
 
-export const DocumentToolbar: React.FC = () => {
+interface IDocumentToolbar {
+  isTransferring: boolean;
+  onImport?: () => Promise<void>;
+  onExport?: () => Promise<void>;
+}
+
+export const DocumentToolbar: React.FC<IDocumentToolbar> = ({
+  isTransferring,
+  onImport,
+  onExport,
+}) => {
   // Form
   //
 
@@ -23,9 +33,9 @@ export const DocumentToolbar: React.FC = () => {
   let StatusIcon = Check;
   let statusText = "All changes saved";
 
-  if (isSubmitting) {
+  if (isSubmitting || isTransferring) {
     StatusIcon = LoaderCircle;
-    statusText = "Applying…";
+    statusText = isTransferring ? "Working with file…" : "Applying…";
   } else if (isDirty) {
     StatusIcon = Circle;
     statusText = "Unsaved changes";
@@ -36,28 +46,62 @@ export const DocumentToolbar: React.FC = () => {
   return (
     <header className={header()}>
       <h1 className={screenTitle()}>Document settings</h1>
+
       <div className={actions()}>
-        <div className={status()} data-dirty={isDirty}>
-          <StatusIcon className={statusIcon({ busy: isSubmitting })} aria-hidden="true" />
-          <output>{statusText}</output>
+        <div>
+          {onImport && (
+            <Button
+              type="button"
+              variant="outline"
+              size='xs'
+              disabled={isSubmitting || isTransferring}
+              onClick={() => void onImport()}
+            >
+              <Upload aria-hidden="true" />
+              Import
+            </Button>
+          )}
+
+          {onExport && (
+            <Button
+              type="button"
+              variant="outline"
+              size='xs'
+              disabled={isSubmitting || isTransferring}
+              onClick={() => void onExport()}
+            >
+              <Download aria-hidden="true" />
+              Export
+            </Button>
+          )}
         </div>
 
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          aria-label="Reset changes"
-          title="Reset changes"
-          disabled={!isDirty || isSubmitting}
-          onClick={() => reset()}
-        >
-          <RotateCcw aria-hidden="true" />
-        </Button>
+        <div className="flex items-center gap-2">
+          <div className={status()} data-dirty={isDirty}>
+            <StatusIcon
+              className={statusIcon({ busy: isSubmitting || isTransferring })}
+              aria-hidden="true"
+            />
+            <output>{statusText}</output>
+          </div>
 
-        <Button type="submit" disabled={!isDirty || isSubmitting}>
-          <Save aria-hidden="true" />
-          Apply changes
-        </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            aria-label="Reset changes"
+            title="Reset changes"
+            disabled={!isDirty || isSubmitting || isTransferring}
+            onClick={() => reset()}
+          >
+            <RotateCcw aria-hidden="true" />
+          </Button>
+
+          <Button type="submit" disabled={!isDirty || isSubmitting || isTransferring}>
+            <Save aria-hidden="true" />
+            Apply changes
+          </Button>
+        </div>
       </div>
     </header>
   );

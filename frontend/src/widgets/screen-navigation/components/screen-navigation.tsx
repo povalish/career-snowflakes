@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 
-import { House, Settings2 } from "lucide-react";
+import { Application } from "@wailsio/runtime";
+import { House, Power, Settings2 } from "lucide-react";
 
 import { ROUTES } from "@/shared/config/routes";
 
@@ -36,6 +37,15 @@ export const ScreenNavigation: React.FC<IScreenNavigation> = ({ active }) => {
       >
         <Settings2 className={icon()} aria-hidden="true" />
       </Link>
+      <button
+        type="button"
+        aria-label="Exit application"
+        title="Quit"
+        className={navigationLink()}
+        onClick={() => void Application.Quit()}
+      >
+        <Power className={icon()} aria-hidden="true" />
+      </button>
     </nav>
   );
 };

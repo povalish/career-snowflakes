@@ -6,8 +6,8 @@ import { cva } from "class-variance-authority";
 export const main = cva(`
   relative isolate overflow-hidden
   grid min-h-screen place-items-center
-  bg-background px-4 py-8 text-foreground
-  sm:px-8 sm:py-10
+  bg-background text-foreground
+  px-4 py-8 sm:px-8 sm:py-10
 `);
 
 export const background = cva(`

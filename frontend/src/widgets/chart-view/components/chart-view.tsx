@@ -38,8 +38,6 @@ export const ChartView: React.FC<IChartView> = ({ tracks, onLevelSelect }) => {
           trackIndex={trackIndex}
           angle={angle}
           ringWidth={ringWidth}
-          startsGroup={tracks[trackIndex - 1]?.groupId !== track.groupId}
-          endsGroup={tracks[trackIndex + 1]?.groupId !== track.groupId}
           onSelect={onLevelSelect}
         />
       ))}

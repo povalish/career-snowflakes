@@ -7,7 +7,7 @@ export const main = cva(`
   relative isolate overflow-hidden
   grid min-h-screen place-items-center
   bg-background text-foreground
-  px-4 py-8 sm:px-8 sm:py-10
+  px-4 py-8 pl-70
 `);
 
 export const background = cva(`
@@ -16,15 +16,18 @@ export const background = cva(`
 `);
 
 export const content = cva(`
-  mx-auto grid w-full max-w-7xl
-  grid-cols-[minmax(0,46rem)_minmax(13rem,15rem)] items-center justify-center
-  gap-[clamp(2rem,5vw,4.5rem)]
-  [@media(max-width:700px)]:grid-cols-1
+  w-full max-w-7xl
+  flex flex-row-reverse items-center justify-center
+  mx-auto gap-[clamp(2rem,5vw,4.5rem)] [@media(max-width:700px)]:flex-col
 `);
 
 export const chartContainer = cva(`
-  w-full max-w-[min(92vw,72vh,46rem)]
+  min-w-0 w-full max-w-[min(92vw,72vh,46rem)]
 `);
+
+export const listContainer = cva(`
+  absolute top-8 left-8 bottom-8
+`)
 
 export const loadingState = cva(`
   flex items-center gap-2

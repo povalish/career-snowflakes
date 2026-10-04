@@ -1,6 +1,6 @@
 {
   "oxc.path.oxlint": "frontend/node_modules/.bin/oxlint",
-  "oxc.path.tsgolint": "frontend/node_modules/.bin/tsgolint",
+  "oxc.path.tsgolint": "frontend/node_modules/.bin/tsgolint.cmd",
   "oxc.configPath": "frontend/.oxlintrc.json",
   "oxc.typeAware": true,
   "oxc.tsConfigPath": "frontend/tsconfig.json",

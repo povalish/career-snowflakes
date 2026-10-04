@@ -9,12 +9,13 @@ import type { Document } from "./document.types";
 
 export class DocumentService {
   public document: Document;
+  public state = { isLoading: false, errMsg: '' };
+
   public selectedTrackId: string | null = null;
   public selectedLevel: number | null = null;
 
   constructor(document: Document) {
     this.document = document;
-
     makeAutoObservable(this, {}, { autoBind: true });
   }
 
@@ -53,10 +54,18 @@ export class DocumentService {
   //
 
   public async load(): Promise<Document> {
-    const document = await DocumentBridgeService.load();
+    try {
+      this.state.isLoading = true;
+      const document = await DocumentBridgeService.load();
 
-    this.setDocument(document);
-    return document;
+      this.setDocument(document);
+      return document;
+    } catch (err) {
+      this.state.errMsg = err instanceof Error ? err.message : "Could not load document";
+      return this.document;
+    } finally {
+      this.state.isLoading = false;
+    }
   }
 
   public async save(candidate: Document): Promise<Document> {

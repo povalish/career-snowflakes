@@ -4,9 +4,14 @@ import { cva } from "class-variance-authority";
 //
 
 export const list = cva(`
-  grid gap-4 pt-4.5
+  w-full h-full max-w-70
+  overflow-y-auto
+  grid shrink-0 gap-4
+  p-4
+  rounded-2xl border border-border/70 bg-card/20 shadow-2xl backdrop-blur-xl
   [@media(max-width:700px)]:grid-cols-2
   [@media(max-width:700px)]:gap-x-1.75 [@media(max-width:700px)]:gap-y-4.5
+  [@media(max-width:700px)]:max-w-none
 `);
 
 export const groupTitle = cva(`

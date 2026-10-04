@@ -14,8 +14,6 @@ interface IChartTrack {
   trackIndex: number;
   angle: number;
   ringWidth: number;
-  startsGroup: boolean;
-  endsGroup: boolean;
   onSelect: (trackId: string, level: number) => void;
 }
 
@@ -24,13 +22,11 @@ export const ChartTrack: React.FC<IChartTrack> = ({
   trackIndex,
   angle,
   ringWidth,
-  startsGroup,
-  endsGroup,
   onSelect,
 }) => {
   const colorClass = GROUP_COLOR_CLASSES[track.color] ?? GROUP_COLOR_CLASSES.aqua;
-  const startAngle = trackIndex * angle + (startsGroup ? 1 : 0.35);
-  const endAngle = (trackIndex + 1) * angle - (endsGroup ? 1 : 0.35);
+  const startAngle = trackIndex * angle + 0.35;
+  const endAngle = (trackIndex + 1) * angle - 0.35;
   const dot = polarPoint(52, (trackIndex + 0.5) * angle);
   const label = polarPoint(263, (trackIndex + 0.5) * angle);
 

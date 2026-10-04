@@ -48,7 +48,7 @@ export const DocumentToolbar: React.FC<IDocumentToolbar> = ({
       <h1 className={screenTitle()}>Document settings</h1>
 
       <div className={actions()}>
-        <div>
+        <div className="flex gap-2">
           {onImport && (
             <Button
               type="button"

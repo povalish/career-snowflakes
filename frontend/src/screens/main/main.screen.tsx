@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import { LoaderCircle } from "lucide-react";
 import { observer } from "mobx-react-lite";
 
 import { documentService } from "@/entities/document";
@@ -14,13 +13,13 @@ import {
   bottomAccent,
   chartContainer,
   content,
-  loadError,
-  loadingIcon,
-  loadingState,
+  listContainer,
   main,
 } from "./main.classes";
 import { mapDocumentToChartTracks } from "./utils/mapDocumentToChartTracks";
 import { mapDocumentToListViewGroups } from "./utils/mapDocumentToListViewGroups";
+import { MainLoadingScreen } from "./main-loading.screen";
+import { MainErrorScreen } from "./main-error.screen";
 
 //
 //
@@ -38,57 +37,17 @@ export const MainScreen: React.FC = observer(() => {
   //
 
   const [detailsOpen, setDetailsOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [loadErrorMessage, setLoadErrorMessage] = useState<string | null>(null);
 
-  useEffect(() => {
-    let active = true;
+  // Conditions
+  //
 
-    const loadDocument = async (): Promise<void> => {
-      try {
-        await documentService.load();
-      } catch (error) {
-        if (!active) return;
-        setLoadErrorMessage(error instanceof Error ? error.message : "Could not load document");
-      } finally {
-        if (active) setIsLoading(false);
-      }
-    };
-
-    void loadDocument();
-
-    return () => {
-      active = false;
-    };
-  }, []);
-
-  if (isLoading) {
-    return (
-      <main className={main()}>
-        <div className={background()} aria-hidden="true" />
-        <output className={loadingState()}>
-          <LoaderCircle className={loadingIcon()} aria-hidden="true" />
-          Loading document…
-        </output>
-        <ScreenNavigation active="main" />
-      </main>
-    );
+  if (documentService.state.isLoading) {
+    return <MainLoadingScreen />;
   }
 
-  if (loadErrorMessage) {
-    return (
-      <main className={main()}>
-        <div className={background()} aria-hidden="true" />
-        <p className={loadError()} role="alert">
-          Could not load document: {loadErrorMessage}
-        </p>
-        <ScreenNavigation active="main" />
-      </main>
-    );
+  if (documentService.state.errMsg) {
+    return <MainErrorScreen message={documentService.state.errMsg} />
   }
-
-  const chartTracks = mapDocumentToChartTracks(documentService.document);
-  const listGroups = mapDocumentToListViewGroups(documentService.document);
 
   // Methods
   //
@@ -105,6 +64,10 @@ export const MainScreen: React.FC = observer(() => {
   };
 
   // Aliases
+  //
+
+  const chartTracks = mapDocumentToChartTracks(documentService.document);
+  const listGroups = mapDocumentToListViewGroups(documentService.document);
 
   const availableSelections = documentService.document.schema.groups.flatMap((group) =>
     group.tracks.map((track) => ({ group, track })),
@@ -127,11 +90,14 @@ export const MainScreen: React.FC = observer(() => {
         <div className={chartContainer()}>
           <ChartView tracks={chartTracks} onLevelSelect={selectLevel} />
         </div>
-        <ListView
-          groups={listGroups}
-          selectedTrackId={documentService.selectedTrackId}
-          onTrackSelect={selectTrack}
-        />
+
+        <div className={listContainer()}>
+          <ListView
+            groups={listGroups}
+            selectedTrackId={documentService.selectedTrackId}
+            onTrackSelect={selectTrack}
+          />
+        </div>
       </div>
 
       <ScreenNavigation active="main" />

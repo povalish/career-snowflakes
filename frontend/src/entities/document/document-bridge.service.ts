@@ -19,7 +19,6 @@ export class DocumentBridgeService {
 
   public static async import(): Promise<Document | null> {
     const document = await CareerService.Import();
-
     return document ? fromServiceDocument(document) : null;
   }
 

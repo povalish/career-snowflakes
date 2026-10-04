@@ -78,15 +78,20 @@ export const Drawer: React.FC<IDrawer> = ({
             progress={progress}
             levelCount={track.levels.length}
           />
+
           <DrawerDescription description={track.description} />
+
           {error && <DrawerError error={error} />}
+
           <DrawerLevels
             levels={track.levels}
             progress={progress}
             selectedLevel={level}
             onSelectLevel={onSelectLevel}
           />
+
           <DrawerTrack level={level} progress={progress} stage={stage} />
+
           <DrawerFooter
             busy={busy}
             level={level}

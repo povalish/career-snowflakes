@@ -12,6 +12,7 @@ export const list = cva(`
   [@media(max-width:700px)]:grid-cols-2
   [@media(max-width:700px)]:gap-x-1.75 [@media(max-width:700px)]:gap-y-4.5
   [@media(max-width:700px)]:max-w-none
+  scrollbar-none
 `);
 
 export const groupTitle = cva(`

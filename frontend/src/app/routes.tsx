@@ -1,16 +1,14 @@
-import type { RouteObject } from "react-router";
 import { createMemoryRouter } from "react-router";
 
-import { MainScreen } from "@/screens/main";
-import { SettingsScreen } from "@/screens/settings";
-import { ROUTES } from "@/shared/config/routes";
+import { documentService } from "@/career/document";
 
-//
-//
+import { DocumentWorkspace } from "./document-workspace";
+import { ROUTES } from "./route-paths";
 
-const routes = [
-  { path: ROUTES.main, element: <MainScreen /> },
-  { path: ROUTES.settings, element: <SettingsScreen /> },
-] satisfies RouteObject[];
-
-export const router = createMemoryRouter(routes);
+export const router = createMemoryRouter([
+  { path: ROUTES.main, element: <DocumentWorkspace service={documentService} active="main" /> },
+  {
+    path: ROUTES.settings,
+    element: <DocumentWorkspace service={documentService} active="settings" />,
+  },
+]);

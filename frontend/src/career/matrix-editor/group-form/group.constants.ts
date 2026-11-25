@@ -1,0 +1,16 @@
+import type { GROUP_COLORS } from "@/career/group-colors";
+
+//
+//
+
+export const MAX_GROUPS = 8;
+
+export const COLOR_NAMES: Record<(typeof GROUP_COLORS)[number], string> = {
+  aqua: "Aqua",
+  blue: "Blue",
+  purple: "Purple",
+  red: "Red",
+  green: "Green",
+  yellow: "Yellow",
+  orange: "Orange",
+};

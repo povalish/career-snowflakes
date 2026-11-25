@@ -1,0 +1,54 @@
+import "@testing-library/jest-dom/vitest";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
+
+import { ChartView } from "./chart-view";
+import type { ChartViewTrack } from "./chart-view.types";
+
+//
+//
+
+const tracks: ChartViewTrack[] = [
+  {
+    id: "frontend",
+    code: "FE",
+    groupId: "engineering",
+    name: "Frontend",
+    color: "aqua",
+    levels: [
+      { name: "Foundations", completed: true },
+      { name: "Architecture", completed: false },
+    ],
+  },
+];
+
+//
+//
+
+afterEach(cleanup);
+
+describe("<ChartView />", () => {
+  it("reports the track when a level is selected", () => {
+    const onLevelSelect = vi.fn<(trackId: string, level: number) => void>();
+
+    render(<ChartView tracks={tracks} onLevelSelect={onLevelSelect} />);
+
+    fireEvent.click(screen.getByRole("button", { name: /Frontend: level 2/ }));
+
+    expect(onLevelSelect).toHaveBeenCalledOnce();
+    expect(onLevelSelect).toHaveBeenCalledWith("frontend", 2);
+    expect(screen.getByText("FE")).toBeVisible();
+  });
+
+  it("supports selecting a level from the keyboard", () => {
+    const onLevelSelect = vi.fn<(trackId: string, level: number) => void>();
+
+    render(<ChartView tracks={tracks} onLevelSelect={onLevelSelect} />);
+
+    fireEvent.keyDown(screen.getByRole("button", { name: /Frontend: level 1/ }), {
+      key: "Enter",
+    });
+
+    expect(onLevelSelect).toHaveBeenCalledWith("frontend", 1);
+  });
+});
